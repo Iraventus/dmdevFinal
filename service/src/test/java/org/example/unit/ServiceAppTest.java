@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ServiceAppTest {
 
     @Test
-    public void shouldAnswerWithTrue() {
+    void shouldAnswerWithTrue() {
         assertTrue(true);
     }
 }

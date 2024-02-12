@@ -1,0 +1,61 @@
+CREATE TABLE users(
+id BIGSERIAL PRIMARY KEY,
+login varchar(32) unique not null ,
+password varchar(32) not null ,
+firstname varchar(128),
+lastname varchar(128),
+birth_date date,
+registration_date date,
+role varchar (32),
+address jsonb,
+phone varchar (32)
+);
+
+CREATE TABLE board_games
+(
+id BIGSERIAL PRIMARY KEY,
+name varchar(128),
+genre_and_theme varchar(128),
+localization varchar(16),
+description varchar(1024),
+contents varchar(256),
+creator varchar(128),
+quantity integer,
+price integer
+);
+
+create table producer
+(
+id BIGSERIAL PRIMARY KEY,
+name varchar(128) unique ,
+producible_goods varchar(128),
+legal_address jsonb
+);
+
+CREATE TABLE accessories
+(
+id BIGSERIAL PRIMARY KEY,
+name varchar(128),
+description varchar(1024),
+producer_id bigserial references producer(id),
+quantity integer,
+price integer
+);
+
+create table cart
+(
+id BIGSERIAL PRIMARY KEY,
+board_game_id BIGINT references board_games(id),
+accessories_id BIGINT references accessories(id),
+total_goods integer,
+total_price integer
+);
+
+create table orders
+(
+id BIGINT PRIMARY KEY references cart(id) on delete cascade,
+user_id bigint references users(id),
+status varchar(32),
+creation_date timestamp,
+reservation_end_date timestamp
+);
