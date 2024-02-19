@@ -2,28 +2,27 @@ package org.example.entity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.example.entity.goods.Accessories;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.util.List;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = "accessories")
 @Builder
 @Entity
-@Table(name = "producer", schema = "public")
-public class Producer {
+public class Producer extends BaseEntity<Long>{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(nullable = false, unique = true)
     private String name;
-    @Column(name = "producible_goods")
-    private String producibleGoods;
+    private String producerInfo;
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "legal_address")
-    private JsonNode address;
+    private JsonNode legalAddress;
+    @OneToMany(mappedBy = "producer", cascade = CascadeType.PERSIST)
+    private List<Accessories> accessories;
 }

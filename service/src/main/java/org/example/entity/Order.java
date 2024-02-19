@@ -1,28 +1,29 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.sql.Timestamp;
 
+import java.time.Instant;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "orders", schema = "public")
-public class Order {
+@Table(name = "orders")
+public class Order extends BaseEntity<Long> {
 
-    @Id
-    private Cart cart;
-    private User user;
+    @OneToOne(optional = false)
+    private CartGoods cartGoods;
     @Enumerated(EnumType.STRING)
     private Status status;
-    @Column(name = "creation_date")
-    private Timestamp creationDate;
-    @Column(name = "reservation_end_date")
-    private Timestamp reservationEndDate;
+    private Instant creationDate;
+    private Instant reservationEndDate;
+
+    public void setCartGoods(CartGoods cartGoods) {
+        cartGoods.setOrder(this);
+        this.cartGoods = cartGoods;
+    }
 }

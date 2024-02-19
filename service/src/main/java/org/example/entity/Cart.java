@@ -1,28 +1,23 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.example.entity.users.User;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = "cartGoods")
 @Builder
 @Entity
-@Table(name = "cart", schema = "public")
-public class Cart {
+public class Cart extends BaseEntity<Long> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private List<BoardGames> boardGames;
-    private List<Accessories> accessories;
-    @Column(name = "total_goods")
-    private int totalGoods;
-    @Column(name = "total_price")
-    private int totalPrice;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, optional = false)
+    private User user;
+    private String name;
+    @OneToMany(mappedBy = "cart")
+    private List<CartGoods> cartGoods;
 }
