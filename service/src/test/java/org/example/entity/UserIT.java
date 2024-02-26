@@ -7,56 +7,61 @@ import org.example.nodeModel.AddressNode;
 import org.example.util.HibernateTestUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserIT {
+
+    private final SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
+    private Session session;
+
+    @BeforeEach
+    void getTransaction() {
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+    }
+
+    @AfterEach
+    void commitTransaction() {
+        session.getTransaction().commit();
+    }
+
+    @AfterAll
+    void finish() {
+        sessionFactory.close();
+    }
 
     @Test
     void checkCustomerCreation() {
-        Configuration configuration = new Configuration();
-        configuration.configure();
-        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
 
-            var user = getCustomerUser();
-            session.beginTransaction();
-            session.persist(user);
+        var user = getCustomerUser();
+        session.persist(user);
+        session.evict(user);
 
-            assertThat(session.get(User.class, user.getId())).isEqualTo(user);
-            assertThat(session.get(User.class, user.getId()).getClass()).isEqualTo(Customer.class);
-            session.getTransaction().commit();
-        }
+        assertThat(session.get(User.class, user.getId()).getId()).isEqualTo(user.getId());
+        assertThat(session.get(User.class, user.getId()).getClass()).isEqualTo(Customer.class);
     }
 
     @Test
     void checkUserUpdate() {
-        Configuration configuration = new Configuration();
-        configuration.configure();
-        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
 
-            var user = getCustomerUser();
-            session.beginTransaction();
-            session.persist(user);
-            session.evict(user);
-            user.setFirstname("Petrov");
-            session.merge(user);
+        var user = getCustomerUser();
+        session.persist(user);
+        session.evict(user);
+        user.setFirstname("Petrov");
+        session.merge(user);
 
-            assertThat(session.get(User.class, user.getId()).getFirstname()).isEqualTo("Petrov");
-            session.getTransaction().commit();
-        }
+        assertThat(session.get(User.class, user.getId()).getFirstname()).isEqualTo("Petrov");
     }
 
     @Test
     void checkManagerCreation() {
-        Configuration configuration = new Configuration();
-        configuration.configure();
+
         var manager = Manager.builder()
                 .login("Ivan@gmail1.com")
                 .password("12345")
@@ -64,33 +69,22 @@ public class UserIT {
                 .lastname("Ivanov")
                 .birthDate(LocalDate.of(2000, 1, 19))
                 .build();
-        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
 
-            session.beginTransaction();
-            session.persist(manager);
+        session.persist(manager);
+        session.evict(manager);
 
-            assertThat(session.get(User.class, manager.getId())).isEqualTo(manager);
-            assertThat(session.get(User.class, manager.getId()).getClass()).isEqualTo(Manager.class);
-            session.getTransaction().commit();
-        }
+        assertThat(session.get(User.class, manager.getId()).getId()).isEqualTo(manager.getId());
+        assertThat(session.get(User.class, manager.getId()).getClass()).isEqualTo(Manager.class);
     }
 
     @Test
     void checkUserDeletion() {
-        Configuration configuration = new Configuration();
-        configuration.configure();
         Customer user = getCustomerUser();
-        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
 
-            session.beginTransaction();
-            session.persist(user);
-            session.remove(user);
+        session.persist(user);
+        session.remove(user);
 
-            assertNull(session.get(User.class, user.getId()));
-            session.getTransaction().commit();
-        }
+        assertNull(session.get(User.class, user.getId()));
     }
 
     private Customer getCustomerUser() {

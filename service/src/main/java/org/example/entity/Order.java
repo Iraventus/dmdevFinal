@@ -15,7 +15,7 @@ import java.time.Instant;
 @Table(name = "orders")
 public class Order extends BaseEntity<Long> {
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
     private CartGoods cartGoods;
     @Enumerated(EnumType.STRING)
     private Status status;

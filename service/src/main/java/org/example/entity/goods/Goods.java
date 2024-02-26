@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "name", callSuper = true)
-@ToString(exclude = "cartGoods")
+@ToString(of = "name")
 @Entity
 @Table(name = "goods")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

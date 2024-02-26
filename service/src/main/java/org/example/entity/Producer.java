@@ -9,16 +9,16 @@ import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = "accessories")
+@EqualsAndHashCode(callSuper = true, exclude = "accessories")
 @Builder
 @Entity
 public class Producer extends BaseEntity<Long>{
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
     private String producerInfo;
     @JdbcTypeCode(SqlTypes.JSON)

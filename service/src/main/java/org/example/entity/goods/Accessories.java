@@ -16,7 +16,7 @@ import java.util.List;
 @DiscriminatorValue("accessories")
 public class Accessories extends Goods {
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Producer producer;
 
     @Builder

@@ -1,9 +1,6 @@
 package org.example.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import org.example.entity.goods.Goods;
 
@@ -12,17 +9,18 @@ import java.time.Instant;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(exclude = {"goods", "cart", "order"}, callSuper = true)
+@ToString(exclude = {"goods", "cart", "order"})
 @Builder
 @Entity
 public class CartGoods extends BaseEntity<Long> {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Goods goods;
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Cart cart;
     private Instant createdAt;
-    @OneToOne(mappedBy = "cartGoods", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "cartGoods", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Order order;
     private Integer totalGoods;
     private Integer totalPrice;

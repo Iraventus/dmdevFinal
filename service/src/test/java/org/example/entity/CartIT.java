@@ -6,8 +6,7 @@ import org.example.util.HibernateTestUtil;
 import org.hibernate.PropertyValueException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 
@@ -15,93 +14,88 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CartIT {
+
+    private final SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
+    private Session session;
+
+
+    @BeforeEach
+    void getTransaction() {
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+    }
+
+    @AfterEach
+    void commitTransaction() {
+        session.getTransaction().commit();
+    }
+
+    @AfterAll
+    void finish() {
+        sessionFactory.close();
+    }
 
     @Test
     void checkCartCreation() {
-        Configuration configuration = new Configuration();
-        configuration.configure();
-        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
 
-            var user = getCustomerUser();
-            var cart = Cart.builder()
-                    .name("myCart")
-                    .user(getCustomerUser())
-                    .build();
+        var user = getCustomerUser();
+        var cart = Cart.builder()
+                .name("myCart")
+                .user(user)
+                .build();
 
-            session.beginTransaction();
-            session.persist(user);
-            session.persist(cart);
+        session.persist(user);
+        session.persist(cart);
+        session.clear();
 
-            assertThat(session.get(Cart.class, cart.getId())).isEqualTo(cart);
-            assertThat(session.get(Cart.class, cart.getId()).getUser()).isEqualTo(user);
-            session.getTransaction().commit();
-        }
+        assertThat(session.get(Cart.class, cart.getId()).getId()).isEqualTo(cart.getId());
+        assertThat(session.get(Cart.class, cart.getId()).getUser().getId()).isEqualTo(user.getId());
     }
 
     @Test
     void checkCartWithoutUserCreation() {
-        Configuration configuration = new Configuration();
-        configuration.configure();
-        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
-            var cart = Cart.builder()
-                    .name("myCart")
-                    .build();
 
-            session.beginTransaction();
+        var cart = Cart.builder()
+                .name("myCart")
+                .build();
 
-            assertThrows(PropertyValueException.class, () -> session.persist(cart));
-            session.getTransaction().commit();
-        }
+        assertThrows(PropertyValueException.class, () -> session.persist(cart));
     }
 
     @Test
     void checkCartUpdate() {
-        Configuration configuration = new Configuration();
-        configuration.configure();
-        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
-            var user = getCustomerUser();
-            var cart = Cart.builder()
-                    .name("myCart")
-                    .user(user)
-                    .build();
+        var user = getCustomerUser();
+        var cart = Cart.builder()
+                .name("myCart")
+                .user(user)
+                .build();
 
-            session.beginTransaction();
-            session.persist(user);
-            session.persist(cart);
-            cart.setName("cart");
-            session.evict(cart);
-            session.merge(cart);
+        session.persist(user);
+        session.persist(cart);
+        cart.setName("cart");
+        session.evict(cart);
+        session.merge(cart);
 
-            assertThat(session.get(Cart.class, cart.getId()).getName()).isEqualTo("cart");
-            session.getTransaction().commit();
-        }
+        assertThat(session.get(Cart.class, cart.getId()).getName()).isEqualTo("cart");
     }
 
     @Test
     void checkCartDeletion() {
-        Configuration configuration = new Configuration();
-        configuration.configure();
-        try (SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
 
-            var user = getCustomerUser();
-            var cart = Cart.builder()
-                    .name("myCart")
-                    .user(getCustomerUser())
-                    .build();
+        var user = getCustomerUser();
+        var cart = Cart.builder()
+                .name("myCart")
+                .user(user)
+                .build();
 
-            session.beginTransaction();
-            session.persist(user);
-            session.persist(cart);
-            session.remove(cart);
+        session.persist(user);
+        session.persist(cart);
+        session.clear();
+        session.remove(cart);
 
-            assertNull(session.get(Cart.class, cart.getId()));
-            session.getTransaction().commit();
-        }
+        assertNull(session.get(Cart.class, cart.getId()));
     }
 
     private Customer getCustomerUser() {
