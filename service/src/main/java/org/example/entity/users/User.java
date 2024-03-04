@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @ToString(exclude = "carts")
-@EqualsAndHashCode(callSuper = true, exclude = "carts")
+@EqualsAndHashCode(callSuper = false, exclude = "carts")
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "role")

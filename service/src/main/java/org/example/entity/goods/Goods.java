@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "name", callSuper = true)
+@EqualsAndHashCode(of = "name", callSuper = false)
 @ToString(of = "name")
 @Entity
 @Table(name = "goods")

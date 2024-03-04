@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = "accessories")
-@EqualsAndHashCode(callSuper = true, exclude = "accessories")
+@EqualsAndHashCode(callSuper = false, exclude = "accessories")
 @Builder
 @Entity
 public class Producer extends BaseEntity<Long>{

@@ -9,7 +9,7 @@ import java.time.Instant;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"goods", "cart", "order"}, callSuper = true)
+@EqualsAndHashCode(exclude = {"goods", "cart", "order"}, callSuper = false)
 @ToString(exclude = {"goods", "cart", "order"})
 @Builder
 @Entity

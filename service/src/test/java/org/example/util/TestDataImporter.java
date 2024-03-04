@@ -7,6 +7,7 @@ import org.example.entity.goods.Accessories;
 import org.example.entity.goods.BoardGames;
 import org.example.entity.goods.Goods;
 import org.example.entity.users.Customer;
+import org.example.entity.users.Manager;
 import org.example.entity.users.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,9 +17,11 @@ public class TestDataImporter {
 
     public void importData(SessionFactory sessionFactory) {
         @Cleanup Session session = sessionFactory.openSession();
+        session.beginTransaction();
 
         Customer nick = saveUser(session, "Nick@gmail.com", "Nick");
         Customer alex = saveUser(session, "Alex@gmail.com", "Alex");
+        saveManagerUser(session, "Bob@gmail.com", "Bob", 20);
 
         Producer ultraPro = saveProducer(session, "UltraPro");
         Producer ultimateGuard = saveProducer(session, "Ultimate Guard");
@@ -30,6 +33,8 @@ public class TestDataImporter {
                 15000, Localization.FR);
         BoardGames mageKnight = saveBoardGame(session, "Mage-Knight",
                 10000, Localization.RU);
+        saveBoardGame(session, "Euthia",
+                13000, Localization.EN);
 
         saveAccessory(session, "Dragon Shield sleeves",
                 ultimateGuard, 500);
@@ -42,15 +47,17 @@ public class TestDataImporter {
         Cart secondNickCart = saveCart(session, nick, "Second Nick Cart");
         Cart alexCart = saveCart(session, alex, "Alex cart");
 
-        CartGoods firstNickCartGoods = saveCartGoods(session, ultraProSleeves, firstNickCart);
-        CartGoods secondNickCartGoods = saveCartGoods(session, gloomhaven, firstNickCart);
-        CartGoods thirdNickCartGoods = saveCartGoods(session, mageKnight, secondNickCart);
-        CartGoods firstAlexCartGoods = saveCartGoods(session, arkhamHorror, alexCart);
+        CartGoods firstNickCartGoods = saveCartGoods(session, ultraProSleeves, firstNickCart, 200);
+        CartGoods secondNickCartGoods = saveCartGoods(session, gloomhaven, firstNickCart, 15000);
+        CartGoods thirdNickCartGoods = saveCartGoods(session, mageKnight, secondNickCart, 10000);
+        CartGoods firstAlexCartGoods = saveCartGoods(session, arkhamHorror, alexCart, 5000);
 
         saveOrder(session, firstNickCartGoods, Status.PAID);
         saveOrder(session, secondNickCartGoods, Status.PAID);
         saveOrder(session, thirdNickCartGoods, Status.RESERVED);
         saveOrder(session, firstAlexCartGoods, Status.RESERVED);
+
+        session.getTransaction().commit();
     }
 
     private Accessories saveAccessory(Session session, String name,
@@ -61,8 +68,7 @@ public class TestDataImporter {
                 .description("Reliable protection of your cards")
                 .price(price)
                 .build();
-        session.save(accessory); // не знаю почему, но persist() не сохранил данные в бд
-        // (пробовал persist и persist + flush). Будет круто, если подскажешь, почему так происходит.
+        session.persist(accessory);
         return accessory;
     }
 
@@ -91,15 +97,16 @@ public class TestDataImporter {
                 .cartGoods(cartGoods)
                 .status(status)
                 .build();
-        session.save(order);
+        session.persist(order);
     }
 
-    private CartGoods saveCartGoods(Session session, Goods goods, Cart cart) {
+    private CartGoods saveCartGoods(Session session, Goods goods, Cart cart, Integer totalPrice) {
         CartGoods cartGoods = CartGoods.builder()
                 .goods(goods)
                 .cart(cart)
+                .totalPrice(totalPrice)
                 .build();
-        session.save(cartGoods);
+        session.persist(cartGoods);
         return cartGoods;
     }
 
@@ -108,7 +115,7 @@ public class TestDataImporter {
                 .name(name)
                 .user(user)
                 .build();
-        session.save(cart);
+        session.persist(cart);
         return cart;
     }
 
@@ -117,7 +124,17 @@ public class TestDataImporter {
                 .login(login)
                 .firstname(firstName)
                 .build();
-        session.save(customer);
+        session.persist(customer);
         return customer;
+    }
+
+    private Manager saveManagerUser(Session session, String login, String firstName, Integer discount) {
+        Manager manager = Manager.builder()
+                .login(login)
+                .firstname(firstName)
+                .personalDiscount(discount)
+                .build();
+        session.persist(manager);
+        return manager;
     }
 }

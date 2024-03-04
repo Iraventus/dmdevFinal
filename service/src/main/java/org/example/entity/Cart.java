@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true, exclude = "cartGoods")
+@EqualsAndHashCode(callSuper = false, exclude = "cartGoods")
 @ToString(exclude = "cartGoods")
 @Builder
 @Entity

@@ -5,8 +5,9 @@ import lombok.Value;
 
 @Value
 @Builder
-public class OrderFilter {
+public class UserFilter {
 
     String login;
     String firstName;
+    String lastName;
 }
