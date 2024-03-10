@@ -23,6 +23,7 @@
     <lombok.version>1.18.30</lombok.version>
     <querydsl.version>5.1.0</querydsl.version>
     <hibernate.version>6.4.4.Final</hibernate.version>
+    <spring.version>6.1.4</spring.version>
   </properties>
 
   <dependencyManagement>
@@ -105,6 +106,18 @@
         <artifactId>jakarta.persistence-api</artifactId>
         <version>3.2.0-M1</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+
 
     </dependencies>
   </dependencyManagement>

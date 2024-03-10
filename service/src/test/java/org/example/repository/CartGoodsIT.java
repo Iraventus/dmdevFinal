@@ -1,5 +1,16 @@
-package org.example.dao;
+package org.example.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatList;
+import static org.example.util.DataImporterUtil.dataInit;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import jakarta.persistence.EntityManager;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.List;
+import org.example.config.ApplicationConfiguration;
 import org.example.entity.BoardGameTheme;
 import org.example.entity.Cart;
 import org.example.entity.CartGoods;
@@ -8,46 +19,45 @@ import org.example.entity.goods.BoardGames;
 import org.example.entity.goods.Goods;
 import org.example.entity.users.Customer;
 import org.example.entity.users.User;
-import org.example.util.HibernateTestUtil;
-import org.example.util.TestDataImporter;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.Proxy;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatList;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 class CartGoodsIT {
-
-    private static final SessionFactory SESSION_FACTORY = HibernateTestUtil.buildSessionFactory();
-    private final Session session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(),
-            new Class[]{Session.class}, (proxy, method, args1) -> method.invoke(SESSION_FACTORY.getCurrentSession(), args1));
-    private CartGoodsRepository cartGoodsRepository = null;
+    private final static AnnotationConfigApplicationContext context
+            = new AnnotationConfigApplicationContext(ApplicationConfiguration.class);
+    private static CartGoodsRepository cartGoodsRepository;
+    private static BoardGamesRepository boardGamesRepository;
+    private static CartRepository cartRepository;
+    private static CustomerRepository customerRepository;
+    private static EntityManager session;
 
     @BeforeAll
-    static void initDb() {
-        TestDataImporter.importData(SESSION_FACTORY);
+    static void dataPreparation() {
+        customerRepository = context.getBean(CustomerRepository.class);
+        cartRepository = context.getBean(CartRepository.class);
+        cartGoodsRepository = context.getBean(CartGoodsRepository.class);
+        boardGamesRepository = context.getBean(BoardGamesRepository.class);
+        session = context.getBean(EntityManager.class);
+        dataInit(context);
+    }
+
+    @AfterAll
+    static void closeContext() {
+        context.close();
     }
 
     @BeforeEach
     void getTransaction() {
-        session.beginTransaction();
-        cartGoodsRepository = new CartGoodsRepository(session);
+        session.getTransaction().begin();
     }
 
     @AfterEach
-    void commitTransaction() {
-        session.getTransaction().commit();
+    void rollbackTransaction() {
+        session.getTransaction().rollback();
     }
 
     @Test
@@ -64,69 +74,58 @@ class CartGoodsIT {
     @Test
     void checkCartGoodsCreation() {
 
-        UserRepository userRepository = new UserRepository(session);
-        CartRepository cartRepository = new CartRepository(session);
-        GoodsRepository goodsRepository = new GoodsRepository(session);
-
         var user = getCustomerUser();
         var cart = getCart(user);
         var goods = getBoardGame();
         var cartGoods = getCartGoods(goods, cart);
 
-        userRepository.save(user);
-        goodsRepository.save(goods);
+        customerRepository.save(user);
+        boardGamesRepository.save(goods);
         cartRepository.save(cart);
         var savedCartGoods = cartGoodsRepository.save(cartGoods);
         session.clear();
 
         assertThat(cartGoodsRepository.findById(savedCartGoods.getId()).orElseThrow()).isEqualTo(cartGoods);
 
-        cartGoodsRepository.delete(savedCartGoods.getId());
+        cartGoodsRepository.delete(savedCartGoods);
     }
 
     @Test
     void checkCartGoodsUpdate() {
 
-        UserRepository userRepository = new UserRepository(session);
-        CartRepository cartRepository = new CartRepository(session);
-        GoodsRepository goodsRepository = new GoodsRepository(session);
-
         var user = getCustomerUser();
         var cart = getCart(user);
         var goods = getBoardGame();
         var cartGoods = getCartGoods(goods, cart);
 
-        userRepository.save(user);
-        goodsRepository.save(goods);
+        customerRepository.save(user);
+        boardGamesRepository.save(goods);
         cartRepository.save(cart);
         var savedCartGoods = cartGoodsRepository.save(cartGoods);
         session.clear();
         savedCartGoods.setTotalGoods(10);
         cartGoodsRepository.update(savedCartGoods);
-        session.evict(savedCartGoods);
+        session.clear();
 
         assertThat(cartGoodsRepository.findById(savedCartGoods.getId()).orElseThrow().getTotalGoods()).isEqualTo(10);
 
-        cartGoodsRepository.delete(savedCartGoods.getId());
+        cartGoodsRepository.delete(savedCartGoods);
     }
 
     @Test
     void checkCartGoodsDeletion() {
 
-        UserRepository userRepository = new UserRepository(session);
-        CartRepository cartRepository = new CartRepository(session);
-        GoodsRepository goodsRepository = new GoodsRepository(session);
         var user = getCustomerUser();
         var cart = getCart(user);
         var goods = getBoardGame();
         var cartGoods = getCartGoods(goods, cart);
 
-        userRepository.save(user);
-        goodsRepository.save(goods);
+        customerRepository.save(user);
+        boardGamesRepository.save(goods);
         cartRepository.save(cart);
         var savedCartGoods = cartGoodsRepository.save(cartGoods);
         session.clear();
-        cartGoodsRepository.delete(savedCartGoods.getId());
+        cartGoodsRepository.delete(savedCartGoods);
 
         assertNull(cartGoodsRepository.findById(savedCartGoods.getId()).orElse(null));
     }
