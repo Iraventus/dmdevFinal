@@ -2,13 +2,14 @@ package org.boardGamesShop.repository;
 
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class QPredicate {
 
     private final List<Predicate> predicates = new ArrayList<>();
@@ -26,5 +27,9 @@ public class QPredicate {
 
     public Predicate buildAnd() {
         return ExpressionUtils.anyOf(predicates);
+    }
+
+    public Predicate build() {
+        return ExpressionUtils.allOf(predicates);
     }
 }

@@ -2,17 +2,15 @@ package org.boardGamesShop.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.boardGamesShop.dto.UserFilter;
-import org.boardGamesShop.entity.users.User;
 import org.boardGamesShop.entity.users.Customer;
-import org.boardGamesShop.nodeModel.AddressNode;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Sort;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatList;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RequiredArgsConstructor
 public class CustomerIT extends BaseIT {
@@ -20,93 +18,31 @@ public class CustomerIT extends BaseIT {
     private final CustomerRepository customerRepository;
 
     @Test
-    void checkFindByCustomerID() {
-        UserFilter filter = UserFilter.builder()
-                .login("Nick@gmail.com")
-                .build();
-        var userWithLogin = customerRepository.findByFilters(entityManager, filter).get(0);
+    void checkFindCustomerByFilters() {
+        UserFilter filter = new UserFilter("Nick@gmail.com", "Nick", null);
 
-        Customer user = customerRepository.findById(userWithLogin.getId()).orElseThrow();
+        var user = customerRepository.findAllByFilter(filter);
 
-        assertThat(user.getLogin()).isEqualTo("Nick@gmail.com");
-        assertThat(user.getFirstname()).isEqualTo("Nick");
-        assertThat(user.getClass()).isEqualTo(Customer.class);
+        assertThat(user.size()).isEqualTo(1);
+        assertThat(user.get(0).getLastname()).isEqualTo("Ivanov");
     }
 
     @Test
-    void checkFindManagerByFilters() {
-        UserFilter filter = UserFilter.builder()
-                .login("Nick@gmail.com")
-                .firstName("Nick")
-                .build();
+    void checkFindByLogin() {
+        var customer = customerRepository.findByLogin("Nick@gmail.com");
 
-        var user = customerRepository.findByFilters(entityManager, filter).get(0);
-
-        assertThat(user.getLogin()).isEqualTo("Nick@gmail.com");
-        assertThat(user.getFirstname()).isEqualTo("Nick");
-        assertThat(user.getClass()).isEqualTo(Customer.class);
+        assertTrue(customer.isPresent());
+        assertThat(customer.get().getId()).isEqualTo(1L);
     }
 
     @Test
-    void checkCustomerCreation() {
-        var customerUser = getCustomerUser();
+    void checkAllProducersSortedList() {
+        var sortBy = Sort.sort(Customer.class);
+        var sort = sortBy.by(Customer::getLogin);
 
-        Customer customer = customerRepository.save(customerUser);
-        entityManager.clear();
+        List<Customer> producers = customerRepository.findAllBy(sort);
 
-        assertThat(customerRepository.findById(customer.getId()).orElseThrow()).isEqualTo(customerUser);
-        assertThat(customerRepository.findById(customer.getId()).orElseThrow().getClass()).isEqualTo(
-                Customer.class);
-
-        customerRepository.delete(customer);
-    }
-
-    @Test
-    void checkCustomerUserUpdate() {
-        UserFilter filter = UserFilter.builder()
-                .login("Alex@gmail.com")
-                .build();
-        var userWithLogin = customerRepository.findByFilters(entityManager, filter).get(0);
-
-        userWithLogin.setFirstname("Petr");
-        customerRepository.update(userWithLogin);
-        entityManager.clear();
-
-        assertThat(
-                customerRepository.findById(userWithLogin.getId()).orElseThrow().getFirstname()).isEqualTo(
-                "Petr");
-    }
-
-    @Test
-    void checkCustomerDeletion() {
-        var user = getCustomerUser();
-
-        customerRepository.save(user);
-        entityManager.clear();
-        customerRepository.delete(user);
-
-        assertNull(customerRepository.findById(user.getId()).orElse(null));
-    }
-
-    @Test
-    void checkAllCustomerUsersList() {
-        List<Customer> users = customerRepository.findAll();
-
-        assertThat(users.size()).isEqualTo(2);
-        assertThatList(users.stream().map(User::getLogin).toList()).contains("Nick@gmail.com",
-                "Alex@gmail.com");
-    }
-
-    private Customer getCustomerUser() {
-        return Customer.builder()
-                .login("Ivan@gmail1.com")
-                .password("12345")
-                .firstname("Ivan")
-                .lastname("Ivanov")
-                .birthDate(LocalDate.of(2000, 1, 19))
-                .address(new AddressNode()
-                        .getAddressConvertedToJsonNode("someCountry", "someCity",
-                                "someStreetName", 1, 1))
-                .build();
+        assertThatList(producers.stream().map(Customer::getFirstname).toList())
+                .containsExactly("Alex", "Nick");
     }
 }

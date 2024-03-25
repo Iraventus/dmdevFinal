@@ -1,32 +1,15 @@
 package org.boardGamesShop.repository;
 
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityManager;
-import org.boardGamesShop.dto.UserFilter;
 import org.boardGamesShop.entity.users.Manager;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.boardGamesShop.entity.users.QManager.manager;
+public interface ManagerRepository extends JpaRepository<Manager, Long>, FilterUserRepository {
 
-@Repository
-public class ManagerRepository extends RepositoryBase<Long, Manager> {
+    List<Manager> findAllBy(Sort sort);
 
-    public ManagerRepository(EntityManager entityManager) {
-        super(Manager.class, entityManager);
-    }
-
-    public List<Manager> findByFilters(EntityManager entityManager, UserFilter userFilter) {
-        var predicate = QPredicate.builder()
-                .add(userFilter.getLogin(), manager.login::eq)
-                .add(userFilter.getFirstName(), manager.firstname::eq)
-                .add(userFilter.getLastName(), manager.lastname::eq)
-                .buildAnd();
-        return new JPAQuery<Manager>(entityManager)
-                .select(manager)
-                .from(manager)
-                .where(predicate)
-                .fetch();
-    }
+    Optional<Manager> findByLogin(String login);
 }

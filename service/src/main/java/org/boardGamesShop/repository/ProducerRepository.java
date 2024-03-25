@@ -1,13 +1,15 @@
 package org.boardGamesShop.repository;
 
-import jakarta.persistence.EntityManager;
 import org.boardGamesShop.entity.Producer;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public class ProducerRepository extends RepositoryBase<Long, Producer> {
+import java.util.List;
+import java.util.Optional;
 
-    public ProducerRepository(EntityManager entityManager) {
-        super(Producer.class, entityManager);
-    }
+public interface ProducerRepository extends JpaRepository<Producer, Long> {
+
+    Optional<Producer> findProducerByAccessoriesName(String name);
+
+    List<Producer> findAllBy(Sort sort);
 }

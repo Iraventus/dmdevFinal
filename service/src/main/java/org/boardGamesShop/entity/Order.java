@@ -13,13 +13,12 @@ import java.time.Instant;
 @Builder
 @Entity
 @Table(name = "orders")
-public class Order extends BaseEntity<Long> {
+public class Order extends AuditingEntity<Long> {
 
     @OneToOne(optional = false, fetch = FetchType.LAZY)
     private CartGoods cartGoods;
     @Enumerated(EnumType.STRING)
     private Status status;
-    private Instant creationDate;
     private Instant reservationEndDate;
 
     public void setCartGoods(CartGoods cartGoods) {

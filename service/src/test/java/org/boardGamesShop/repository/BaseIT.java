@@ -1,21 +1,14 @@
 package org.boardGamesShop.repository;
 
-import jakarta.persistence.EntityManager;
-import org.boardGamesShop.util.TestDataImporter;
-import org.boardGamesShop.annotation.IT;
-import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.boardGamesShop.ApplicationRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
-@IT
 @Transactional
+@Sql({
+        "classpath:sql/data.sql"
+})
+@SpringBootTest(classes = ApplicationRunner.class)
 public abstract class BaseIT {
-
-    @Autowired
-    protected EntityManager entityManager;
-
-    @BeforeEach
-    public void init() {
-        TestDataImporter.importData(entityManager);
-    }
 }

@@ -1,13 +1,11 @@
 package org.boardGamesShop.repository;
 
-import jakarta.persistence.EntityManager;
 import org.boardGamesShop.entity.CartGoods;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public class CartGoodsRepository extends RepositoryBase<Long, CartGoods> {
+import java.util.List;
 
-    public CartGoodsRepository(EntityManager entityManager) {
-        super(CartGoods.class, entityManager);
-    }
+public interface CartGoodsRepository extends JpaRepository<CartGoods, Long> {
+
+    List<CartGoodsRepository> findAllByCartId(Long id);
 }

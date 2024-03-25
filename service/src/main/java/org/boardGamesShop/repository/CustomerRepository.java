@@ -1,32 +1,15 @@
 package org.boardGamesShop.repository;
 
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityManager;
-import org.boardGamesShop.dto.UserFilter;
 import org.boardGamesShop.entity.users.Customer;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.boardGamesShop.entity.users.QCustomer.customer;
+public interface CustomerRepository extends JpaRepository<Customer, Long>, FilterUserRepository {
 
-@Repository
-public class CustomerRepository extends RepositoryBase<Long, Customer> {
+    Optional<Customer> findByLogin(String login);
 
-    public CustomerRepository(EntityManager entityManager) {
-        super(Customer.class, entityManager);
-    }
-
-    public List<Customer> findByFilters(EntityManager entityManager, UserFilter userFilter) {
-        var predicate = QPredicate.builder()
-                .add(userFilter.getLogin(), customer.login::eq)
-                .add(userFilter.getFirstName(), customer.firstname::eq)
-                .add(userFilter.getLastName(), customer.lastname::eq)
-                .buildAnd();
-        return new JPAQuery<Customer>(entityManager)
-                .select(customer)
-                .from(customer)
-                .where(predicate)
-                .fetch();
-    }
+    List<Customer> findAllBy(Sort sort);
 }

@@ -1,41 +1,19 @@
 package org.boardGamesShop.repository;
 
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityManager;
-import org.boardGamesShop.dto.BoardGamesFilters;
 import org.boardGamesShop.entity.goods.BoardGames;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.boardGamesShop.entity.goods.QBoardGames.boardGames;
+public interface BoardGamesRepository extends JpaRepository<BoardGames, Long>,
+        FilterBoardGamesRepository {
 
-@Repository
-public class BoardGamesRepository extends RepositoryBase<Long, BoardGames> {
+    Optional<BoardGames> findByName(String name);
 
-    public BoardGamesRepository(EntityManager entityManager) {
-        super(BoardGames.class, entityManager);
-    }
+    Page<BoardGames> findAllBy(Pageable pageable);
 
-    public Optional<BoardGames> findByName(EntityManager entityManager, String name) {
-        return Optional.ofNullable(new JPAQuery<BoardGames>(entityManager)
-                .select(boardGames)
-                .from(boardGames)
-                .where(boardGames.name.eq(name))
-                .fetchOne());
-    }
-
-    public List<BoardGames> findByFilter(EntityManager entityManager,
-                                         BoardGamesFilters boardGamesFilters) {
-        var predicate =
-                QPredicate.builder()
-                        .add(boardGamesFilters.getBoardGameTheme(), boardGames.boardGameTheme::eq)
-                        .add(boardGamesFilters.getLocalization(), boardGames.localization::eq).buildAnd();
-        return new JPAQuery<BoardGames>(entityManager)
-                .select(boardGames)
-                .from(boardGames)
-                .where(predicate)
-                .fetch();
-    }
+    List<BoardGames> findAllByNameContains(String name);
 }

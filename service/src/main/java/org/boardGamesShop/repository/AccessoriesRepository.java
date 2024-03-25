@@ -1,39 +1,20 @@
 package org.boardGamesShop.repository;
 
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityManager;
-import org.boardGamesShop.entity.Producer_;
 import org.boardGamesShop.entity.goods.Accessories;
-import org.boardGamesShop.entity.goods.Accessories_;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.boardGamesShop.entity.goods.QAccessories.accessories;
+public interface AccessoriesRepository extends JpaRepository<Accessories, Long> {
 
-@Repository
-public class AccessoriesRepository extends RepositoryBase<Long, Accessories> {
+    Optional<Accessories> findByName(String name);
 
-    public AccessoriesRepository(EntityManager entityManager) {
-        super(Accessories.class, entityManager);
-    }
+    Page<Accessories> findAllBy(Pageable pageable);
 
-    public Optional<Accessories> findByName(EntityManager entityManager, String name) {
-        return Optional.ofNullable(new JPAQuery<Accessories>(entityManager)
-                .select(accessories)
-                .from(accessories)
-                .where(accessories.name.eq(name))
-                .fetchOne());
-    }
+    List<Accessories> findAllByProducerName(String name);
 
-    public List<Accessories> findByProducerName(EntityManager entityManager, String producerName) {
-
-        var cb = entityManager.getCriteriaBuilder();
-        var criteria = cb.createQuery(Accessories.class);
-        var goods = criteria.from(Accessories.class);
-        var producer = goods.join(Accessories_.PRODUCER);
-        criteria.select(goods).where(cb.equal(producer.get(Producer_.NAME), producerName));
-        return entityManager.createQuery(criteria).getResultList();
-    }
+    List<Accessories> findAllByNameContains(String name);
 }

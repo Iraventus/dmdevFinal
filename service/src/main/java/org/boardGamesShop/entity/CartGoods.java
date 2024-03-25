@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.boardGamesShop.entity.goods.Goods;
 
-import java.time.Instant;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,7 +17,6 @@ public class CartGoods extends BaseEntity<Long> {
     private Goods goods;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Cart cart;
-    private Instant createdAt;
     @OneToOne(mappedBy = "cartGoods", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Order order;
     private Integer totalGoods;
