@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer</title>
+</head>
+<body>
+<form th:action="@{/customers}" method="post">
+    <label for="login"> Login:
+        <input id="login" type="text" name="login" th:value="${customer.login}">
+    </label><br>
+    <label for="birthDate"> BirthDate:
+        <input id="birthDate" type="date" name="birthDate" th:value="${customer.birthDate}">
+    </label><br>
+    <label for="lastname"> Lastname:
+        <input id="lastname" type="text" name="lastname" th:value="${customer.lastname}">
+    </label><br>
+    <label for="firstname"> Firstname:
+        <input id="firstname" type="text" name="firstname" th:value="${customer.firstname}">
+    </label><br>
+    <label for="phone"> Phone:
+        <input id="phone" type="text" name="phone" th:value="${customer.phone}">
+    </label><br>
+    <label for="password"> Password:
+        <input id="password" type="text" name="password" th:value="${customer.password}">
+    </label><br>
+    <button type="submit">Register</button>
+</form>
+</body>
+</html>

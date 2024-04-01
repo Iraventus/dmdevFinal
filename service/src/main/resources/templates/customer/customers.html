@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customers</title>
+</head>
+<body>
+<form action="customers">
+    <label for="login">Login:
+        <input id="login" type="text" name="login">
+    </label>
+    <label for="lastname">Lastname:
+        <input id="lastname" type="text" name="lastname">
+    </label>
+    <label for="firstname">Firstname:
+        <input id="firstname" type="text" name="firstname">
+    </label>
+    <button type="submit">Filter</button>
+</form>
+<div th:each="customer : ${customers}">
+    <a th:href="@{'/customers/' + ${customer.id}}" th:text="|${customer.id}. ${customer.getLogin()}|">SomeText</a>
+</div>
+
+</body>
+</html>
