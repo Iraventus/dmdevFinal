@@ -1,8 +1,9 @@
 package org.board_games_shop.dto;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
+import org.board_games_shop.entity.Role;
+import org.board_games_shop.nodeModel.AddressNode;
 
 import java.time.LocalDate;
 
@@ -16,5 +17,6 @@ public class CustomerCreateEditDto {
     String lastname;
     LocalDate birthDate;
     String phone;
-    JsonNode address;
+    Role role;
+    AddressNode address;
 }

@@ -3,25 +3,23 @@ package org.board_games_shop.entity.users;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.*;
-import org.board_games_shop.entity.Cart;
+import org.board_games_shop.entity.Role;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@DiscriminatorValue("manager")
+@DiscriminatorValue("MANAGER")
 public class Manager extends User {
 
-    private Integer personalDiscount;
+    private String jobTitle;
 
     @Builder
-    public Manager(String login, String password, String firstname, String lastname,
-                   String phone, LocalDate birthDate, LocalDate registrationDate, List<Cart> carts, Integer personalDiscount) {
-        super(login, password, firstname, lastname, phone, birthDate, registrationDate, carts);
-        this.personalDiscount = personalDiscount;
+    public Manager(String login, String password, String firstname, String lastname, String phone, Role role, LocalDate birthDate, LocalDate registrationDate, String jobTitle) {
+        super(login, password, firstname, lastname, phone, role, birthDate, registrationDate);
+        this.jobTitle = jobTitle;
     }
 }

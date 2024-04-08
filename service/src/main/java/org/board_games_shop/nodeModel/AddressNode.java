@@ -19,8 +19,8 @@ public class AddressNode {
     private int houseNumber;
     private int apartmentNumber;
 
-public static JsonNode getAddressConvertedToJsonNode(String country, String city, String streetName,
-                                              int houseNumber, int apartmentNumber) {
+    public static JsonNode getAddressConvertedToJsonNode(String country, String city, String streetName,
+                                                         int houseNumber, int apartmentNumber) {
         var objectMapper = new ObjectMapper();
         AddressNode address = AddressNode.builder()
                 .country(country)

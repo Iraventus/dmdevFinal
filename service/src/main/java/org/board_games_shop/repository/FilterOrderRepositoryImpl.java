@@ -4,12 +4,14 @@ import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.board_games_shop.entity.Order;
+import org.board_games_shop.entity.users.QCustomer;
 
 import java.util.List;
 
 import static org.board_games_shop.entity.QCart.cart;
 import static org.board_games_shop.entity.QCartGoods.cartGoods;
 import static org.board_games_shop.entity.QOrder.order;
+import static org.board_games_shop.entity.users.QCustomer.customer;
 import static org.board_games_shop.entity.users.QUser.user;
 
 @RequiredArgsConstructor
@@ -24,8 +26,8 @@ public class FilterOrderRepositoryImpl implements FilterOrderRepository {
                 .from(order)
                 .join(order.cartGoods, cartGoods)
                 .join(cartGoods.cart, cart)
-                .join(cart.user, user)
-                .where(user.id.eq(id))
+                .join(cart.user, customer)
+                .where(customer.id.eq(id))
                 .fetch();
     }
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<body>
+<form th:action="@{/boardGames}" method="post" th:object="${boardGame}">
+    <label for="name">Name:
+        <input id="name" type="text" name="name" th:value="*{name}">
+    </label><br>
+    <label for="description">Description:
+        <input id="description" type="text" name="description" th:value="*{description}">
+    </label><br>
+    <label for="price">Price:
+        <input id="price" type="text" name="price" th:value="*{price}">
+    </label><br>
+    <label for="contents">Contents:
+        <input id="contents" type="text" name="contents" th:value="*{contents}">
+    </label><br>
+    <label for="quantity">Quantity:
+        <input id="quantity" type="text" name="quantity" th:value="*{quantity}">
+    </label><br>
+    <div th:each="localization : ${localizations}">
+        <input th:id="${localization}" type="radio" name="localization" th:value="${localization}" th:checked="${localization == boardGame.localization}">
+        <label th:for="${localization}" th:text="${localization}">Language</label>
+    </div>
+    <div>
+        <label for="theme">Theme:
+            <select id="theme" name="companyId">
+                <option th:each="theme : ${themes}"
+                        th:value="${theme.name()}"
+                        th:selected="${theme == boardGame.getBoardGameTheme()}"
+                        th:text="${theme}">Theme</option>
+            </select>
+        </label>
+    </div>
+    <button type="submit">Adding</button>
+</form>
+</body>
+</html>

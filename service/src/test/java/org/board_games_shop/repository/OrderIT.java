@@ -15,6 +15,6 @@ class OrderIT extends BaseIT {
     void checkFindAllByUserId() {
         var orders = orderRepository.findAllByFilter(1L);
 
-        assertThat(orders.size()).isEqualTo(3);
+        assertThat(orders.size()).isEqualTo(1);
     }
 }

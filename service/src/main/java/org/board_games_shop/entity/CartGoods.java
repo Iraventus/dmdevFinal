@@ -17,10 +17,9 @@ public class CartGoods extends BaseEntity<Long> {
     private Goods goods;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Cart cart;
-    @OneToOne(mappedBy = "cartGoods", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Order order;
     private Integer totalGoods;
-    private Integer totalPrice;
 
     public void setCart(Cart cart) {
         this.cart = cart;

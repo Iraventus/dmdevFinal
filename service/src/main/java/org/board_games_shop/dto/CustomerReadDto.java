@@ -1,7 +1,8 @@
 package org.board_games_shop.dto;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Value;
+import org.board_games_shop.entity.Role;
+import org.board_games_shop.nodeModel.AddressNode;
 
 import java.time.LocalDate;
 
@@ -13,7 +14,8 @@ public class CustomerReadDto {
     String password;
     String firstname;
     String lastname;
+    Role role;
     LocalDate birthDate;
     String phone;
-    JsonNode address;
+    AddressNode address;
 }

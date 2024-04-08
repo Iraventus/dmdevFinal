@@ -2,6 +2,7 @@ package org.board_games_shop.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.board_games_shop.entity.users.Customer;
 import org.board_games_shop.entity.users.User;
 
 import java.util.List;
@@ -15,9 +16,13 @@ import java.util.List;
 @Entity
 public class Cart extends BaseEntity<Long> {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private User user;
-    private String name;
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    private Customer user;
     @OneToMany(mappedBy = "cart")
     private List<CartGoods> cartGoods;
+
+    public void setCart(Customer user) {
+        user.setCart(this);
+        this.user = user;
+    }
 }

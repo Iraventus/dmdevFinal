@@ -3,21 +3,19 @@ package org.board_games_shop.entity.users;
 import jakarta.persistence.*;
 import lombok.*;
 import org.board_games_shop.entity.AuditingEntity;
-import org.board_games_shop.entity.Cart;
+import org.board_games_shop.entity.Role;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@ToString(exclude = "carts")
-@EqualsAndHashCode(callSuper = false, exclude = "carts")
+@ToString()
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "role")
+@DiscriminatorColumn(name = "status")
 public abstract class User extends AuditingEntity<Long> {
 
     private String login;
@@ -25,8 +23,8 @@ public abstract class User extends AuditingEntity<Long> {
     private String firstname;
     private String lastname;
     private String phone;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     private LocalDate birthDate;
     private LocalDate registrationDate;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
-    private List<Cart> carts = new ArrayList<>();
 }

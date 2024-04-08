@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer</title>
+</head>
+<body>
+<form th:action="@{/producers/{producerId}/update(producerId=${producer.id})}" method="post">
+    <label for="name"> Name:
+        <input id="name" type="text" name="name" th:value="${producer.name}">
+    </label><br>
+    <label for="producerInfo"> ProducerInfo:
+        <input id="producerInfo" type="text" name="producerInfo" th:value="${producer.producerInfo}">
+    </label><br>
+    <button type="submit">Update</button>
+</form>
+<form th:action="@{/producers/{producerId}/delete(producerId=${producer.id})}" method="post">
+    <button type="submit">Remove producer</button>
+</form>
+</body>
+</html>

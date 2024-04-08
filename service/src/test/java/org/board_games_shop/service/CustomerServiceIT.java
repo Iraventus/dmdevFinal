@@ -3,6 +3,8 @@ package org.board_games_shop.service;
 import lombok.RequiredArgsConstructor;
 import org.board_games_shop.dto.CustomerCreateEditDto;
 import org.board_games_shop.dto.CustomerReadDto;
+import org.board_games_shop.entity.Role;
+import org.board_games_shop.nodeModel.AddressNode;
 import org.board_games_shop.repository.BaseIT;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +32,7 @@ public class CustomerServiceIT extends BaseIT {
     @Test
     void findAll() {
         List<CustomerReadDto> result = customerService.findAll();
-        assertThat(result).hasSize(3);
+        assertThat(result).hasSize(4);
     }
 
     @Test
@@ -49,12 +51,14 @@ public class CustomerServiceIT extends BaseIT {
                 "UserTestLastName",
                 LocalDate.now(),
                 "88005553535",
-                getAddressConvertedToJsonNode(
-                        COUNTRY,
-                        CITY,
-                        STREET_NAME,
-                        houseNumber,
-                        apartmentNumber)
+                Role.CUSTOMER,
+                AddressNode.builder()
+                        .country(COUNTRY)
+                        .city(CITY)
+                        .streetName(STREET_NAME)
+                        .houseNumber(houseNumber)
+                        .apartmentNumber(apartmentNumber)
+                        .build()
         );
         CustomerReadDto actualResult = customerService.create(customerDto);
 
@@ -73,12 +77,14 @@ public class CustomerServiceIT extends BaseIT {
                 "UserTestLastName",
                 LocalDate.now(),
                 "88005553535",
-                getAddressConvertedToJsonNode(
-                        COUNTRY,
-                        CITY,
-                        STREET_NAME,
-                        houseNumber,
-                        apartmentNumber)
+                Role.CUSTOMER,
+                AddressNode.builder()
+                        .country(COUNTRY)
+                        .city(CITY)
+                        .streetName(STREET_NAME)
+                        .houseNumber(houseNumber)
+                        .apartmentNumber(apartmentNumber)
+                        .build()
         );
 
         Optional<CustomerReadDto> actualResult = customerService.update(USER_1, customerDto);

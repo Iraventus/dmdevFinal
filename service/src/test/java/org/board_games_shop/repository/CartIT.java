@@ -5,6 +5,7 @@ import org.board_games_shop.entity.Cart;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RequiredArgsConstructor
 class CartIT extends BaseIT {
@@ -13,8 +14,9 @@ class CartIT extends BaseIT {
 
     @Test
     void checkFindByUserId() {
-        var carts = cartRepository.findAllByUserIdOrderByName(1L);
+        var cart = cartRepository.findByUserId(1L);
 
-        assertThat(carts.stream().map(Cart::getName).toList()).containsExactly("first Nick cart", "second Nick cart");
+        assertTrue(cart.isPresent());
+        assertThat(cart.get().getId()).isEqualTo(1L);
     }
 }

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CartGoodsRepository extends JpaRepository<CartGoods, Long> {
 
-    List<CartGoodsRepository> findAllByCartId(Long id);
+    List<CartGoods> findAllByCartId(Long id);
 }

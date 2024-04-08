@@ -1,14 +1,16 @@
-INSERT INTO users (id, login, password, firstname, lastname, role, personal_discount)
-VALUES (1, 'Nick@gmail.com', '12345', 'Nick', 'Ivanov', 'customer', null),
-       (2, 'Alex@gmail.com', 'qwerty', 'Alex', null, 'customer', null),
-       (3, 'Bob@gmail.com', '123qwe', 'Bob', 'Petrov', 'manager', 20),
-       (4, 'Gale@gmail.com', 'qwertys', 'Gale', null, 'customer', null);
+INSERT INTO users (id, login, password, firstname, lastname, role, status, job_title, address)
+VALUES (1, 'Nick@gmail.com', '12345', 'Nick', 'Ivanov', 'CUSTOMER', 'CUSTOMER', null, null),
+       (2, 'Alex@gmail.com', 'qwerty', 'Alex', null, 'CUSTOMER', 'CUSTOMER', null, null),
+       (3, 'Bob@gmail.com', '123qwe', 'Bob', 'Petrov', 'MANAGER', 'MANAGER', null, null),
+       (4, 'Van@gmail.com', '123qwe', 'Van', 'Petrov', 'CUSTOMER', 'CUSTOMER', null, null),
+       (5, 'Gale@gmail.com', 'qwertys', 'Gale', null, 'CUSTOMER', 'CUSTOMER', null, null);
 SELECT SETVAL('users_id_seq', (SELECT MAX(id) FROM users));
 
 INSERT INTO producer (id, name)
 VALUES (1, 'UltraPro'),
        (2, 'Ultimate Guard'),
        (3, 'Card-Pro');
+SELECT SETVAL('producer_id_seq', (SELECT MAX(id) FROM producer));
 
 INSERT INTO goods (id, name, type, board_game_theme, localization, quantity, price, producer_id)
 VALUES (1, 'Dragon Shield sleeves', 'accessories', null, null, 3, 500,
@@ -20,25 +22,40 @@ VALUES (1, 'Dragon Shield sleeves', 'accessories', null, null, 3, 500,
        (6, 'Mage-Knight', 'boardGames', 'EURO', 'FR', 5, 8000, null);
 SELECT SETVAL('goods_id_seq', (SELECT MAX(id) FROM goods));
 
-INSERT INTO cart (id, name, user_id)
-VALUES (1, 'first Nick cart', (SELECT id FROM users WHERE login = 'Nick@gmail.com')),
-       (2, 'second Nick cart', (SELECT id FROM users WHERE login = 'Nick@gmail.com')),
-       (3, 'Alex cart', (SELECT id FROM users WHERE login = 'Alex@gmail.com'));
+INSERT INTO cart (id, user_id)
+VALUES (1, (SELECT id FROM users WHERE login = 'Nick@gmail.com')),
+       (2, (SELECT id FROM users WHERE login = 'Alex@gmail.com'));
 SELECT SETVAL('cart_id_seq', (SELECT MAX(id) FROM cart));
 
-INSERT INTO cart_goods (id, cart_id, goods_id, total_price)
-VALUES (1, (SELECT id FROM cart WHERE name = 'first Nick cart'), (SELECT id FROM goods WHERE name = 'UltraPro Sleeves'),
-        200),
-       (2, (SELECT id FROM cart WHERE name = 'first Nick cart'), (SELECT id FROM goods WHERE name = 'Gloomhaven'),
-        15000),
-       (3, (SELECT id FROM cart WHERE name = 'second Nick cart'), (SELECT id FROM goods WHERE name = 'Gloomhaven'),
-        10000),
-       (4, (SELECT id FROM cart WHERE name = 'Alex cart'), (SELECT id FROM goods WHERE name = 'Arkham Horror'), 5000);
-SELECT SETVAL('cart_goods_id_seq', (SELECT MAX(id) FROM cart_goods));
-
-INSERT INTO orders (id, cart_goods_id, status)
-VALUES (1, (SELECT id FROM cart_goods WHERE total_price = 200), 'PAID'),
-       (2, (SELECT id FROM cart_goods WHERE total_price = 15000), 'PAID'),
-       (3, (SELECT id FROM cart_goods WHERE total_price = 10000), 'RESERVED'),
-       (4, (SELECT id FROM cart_goods WHERE total_price = 5000), 'RESERVED');
+INSERT INTO orders (id, user_id, status)
+VALUES (1, (SELECT id FROM users WHERE login = 'Nick@gmail.com'), 'PAID'),
+       (3, (SELECT id FROM users WHERE login = 'Alex@gmail.com'), 'RESERVED');
 SELECT SETVAL('orders_id_seq', (SELECT MAX(id) FROM orders));
+
+INSERT INTO cart_goods (id, cart_id, goods_id, order_id, total_goods)
+VALUES (1, (SELECT cart.id
+            FROM cart
+                     JOIN users ON cart.user_id = users.id
+            WHERE login = 'Nick@gmail.com'), (SELECT id FROM goods WHERE name = 'UltraPro Sleeves'),
+        (SELECT orders.id
+         FROM orders
+                  JOIN users ON orders.user_id = users.id
+         where login = 'Nick@gmail.com'), 3),
+       (2, (SELECT cart.id
+            FROM cart
+                     JOIN users ON cart.user_id = users.id
+            WHERE login = 'Nick@gmail.com'), (SELECT id FROM goods WHERE name = 'Gloomhaven'),
+        (SELECT orders.id
+         FROM orders
+                  JOIN users ON orders.user_id = users.id
+         where login = 'Nick@gmail.com'),
+        1),
+       (3, (SELECT cart.id
+            FROM cart
+                     JOIN users ON cart.user_id = users.id
+            WHERE login = 'Alex@gmail.com'), (SELECT id FROM goods WHERE name = 'Arkham Horror'),
+        (SELECT orders.id
+         FROM orders
+                  JOIN users ON orders.user_id = users.id
+         where login = 'Alex@gmail.com'), 1);
+SELECT SETVAL('cart_goods_id_seq', (SELECT MAX(id) FROM cart_goods));
