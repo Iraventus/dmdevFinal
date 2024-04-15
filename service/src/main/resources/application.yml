@@ -23,6 +23,6 @@ spring:
       client:
         registration:
           google:
-            client-id: 999298694309-u1ri5ipilak3ud5nk2pn3gjkntdfvje1.apps.googleusercontent.com
-            client-secret: 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
+            client-id:
+            client-secret:
             redirect-uri: http://localhost:8080/login/oauth2/code/google
