@@ -5,6 +5,7 @@
     <title>Customers</title>
 </head>
 <body>
+<div th:insert="~{fragment :: header}"></div>
 <form action="customers">
     <label for="login">Login:
         <input id="login" type="text" name="login">
@@ -20,6 +21,5 @@
 <div th:each="customer : ${customers}">
     <a th:href="@{'/customers/' + ${customer.id}}" th:text="|${customer.id}. ${customer.getLogin()}|">SomeText</a>
 </div>
-
 </body>
 </html>

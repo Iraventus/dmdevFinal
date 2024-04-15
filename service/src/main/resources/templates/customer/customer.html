@@ -5,6 +5,7 @@
     <title>Customer</title>
 </head>
 <body>
+<div th:insert="~{fragment :: header}"></div>
 <form th:action="@{/customers/{customerId}/update(customerId=${customer.id})}" method="post">
     <label for="login"> Login:
         <input id="login" type="text" name="login" th:value="${customer.login}">
@@ -22,7 +23,7 @@
         <input id="phone" type="text" name="phone" th:value="${customer.phone}">
     </label><br>
     <label for="password"> Password:
-        <input id="password" type="text" name="password" th:value="${customer.password}">
+        <input id="password" type="text" name="password">
     </label><br>
     <button type="submit">Update</button>
 </form>

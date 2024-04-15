@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customers</title>
+</head>
+<body>
+<div th:insert="~{fragment :: header}"></div>
+<form action="managers">
+    <label for="login">Login:
+        <input id="login" type="text" name="login">
+    </label>
+    <label for="lastname">Lastname:
+        <input id="lastname" type="text" name="lastname">
+    </label>
+    <label for="firstname">Firstname:
+        <input id="firstname" type="text" name="firstname">
+    </label>
+    <button type="submit">Filter</button>
+</form>
+<div th:each="manager : ${managers}">
+    <a th:href="@{'/managers/' + ${manager.id}}" th:text="|${manager.id}. ${manager.getLogin()}|">SomeText</a>
+</div>
+
+</body>
+</html>

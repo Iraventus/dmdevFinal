@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer</title>
+</head>
+<body>
+<div th:insert="~{fragment :: header}"></div>
+<form th:action="@{/managers/{managerId}/update(managerId=${manager.id})}" method="post">
+    <label for="login"> Login:
+        <input id="login" type="text" name="login" th:value="${manager.login}">
+    </label><br>
+    <label for="birthDate"> BirthDate:
+        <input id="birthDate" type="date" name="birthDate" th:value="${manager.birthDate}">
+    </label><br>
+    <label for="lastname"> Lastname:
+        <input id="lastname" type="text" name="lastname" th:value="${manager.lastname}">
+    </label><br>
+    <label for="firstname"> Firstname:
+        <input id="firstname" type="text" name="firstname" th:value="${manager.firstname}">
+    </label><br>
+    <label for="phone"> Phone:
+        <input id="phone" type="text" name="phone" th:value="${manager.phone}">
+    </label><br>
+    <label for="password"> Password:
+        <input id="password" type="text" name="password">
+    </label><br>
+    <label for="jobTitle"> Password:
+        <input id="jobTitle" type="text" name="jobTitle" th:value="${manager.jobTitle}">
+    </label><br>
+    <button type="submit">Update</button>
+</form>
+<form th:action="@{/managers/{managerId}/delete(managerId=${manager.id})}" method="post">
+    <button type="submit">Remove account</button>
+</form>
+</body>
+</html>

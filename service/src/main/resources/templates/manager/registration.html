@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<body>
+<form th:action="@{/managers}" method="post" th:object="${manager}">
+    <label for="login"> Login:
+        <input id="login" type="text" name="login" th:value="${manager.getLogin()}">
+    </label><br>
+    <label for="birthDate"> BirthDate:
+        <input id="birthDate" type="date" name="birthDate" th:value="${manager.birthDate}">
+    </label><br>
+    <label for="lastname"> Lastname:
+        <input id="lastname" type="text" name="lastname" th:value="${manager.lastname}">
+    </label><br>
+    <label for="firstname"> Firstname:
+        <input id="firstname" type="text" name="firstname" th:value="${manager.firstname}">
+    </label><br>
+    <label for="phone"> Phone:
+        <input id="phone" type="text" name="phone" th:value="${manager.phone}">
+    </label><br>
+    <label for="password"> Password:
+        <input id="password" type="text" name="password" th:value="${manager.password}">
+    </label><br>
+    <label for="jobTitle"> Job Title:
+        <input id="jobTitle" type="text" name="jobTitle" th:value="${manager.jobTitle}">
+    </label><br>
+    <button type="submit">Adding</button>
+</form>
+</body>
+</html>

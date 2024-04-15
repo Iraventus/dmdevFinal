@@ -5,11 +5,10 @@ CREATE TABLE IF NOT EXISTS users
 (
     id                BIGSERIAL PRIMARY KEY,
     login             varchar(32) UNIQUE NOT NULL,
-    password          varchar(32)        NOT NULL,
+    password          varchar(128) DEFAULT '{noop123}',
     firstname         varchar(128),
     lastname          varchar(128),
     birth_date        date,
-    registration_date date,
     role              varchar(32),
     status            varchar(32),
     address           jsonb,

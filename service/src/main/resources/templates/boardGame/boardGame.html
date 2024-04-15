@@ -27,7 +27,7 @@
     </div>
     <div>
         <label for="theme">Theme:
-            <select id="theme" name="companyId">
+            <select id="theme" name="theme">
                 <option th:each="theme : ${themes}"
                         th:value="${theme.name()}"
                         th:selected="${theme == boardGame.getBoardGameTheme()}"

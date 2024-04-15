@@ -1,9 +1,9 @@
 INSERT INTO users (id, login, password, firstname, lastname, role, status, job_title, address)
-VALUES (1, 'Nick@gmail.com', '12345', 'Nick', 'Ivanov', 'CUSTOMER', 'CUSTOMER', null, null),
-       (2, 'Alex@gmail.com', 'qwerty', 'Alex', null, 'CUSTOMER', 'CUSTOMER', null, null),
-       (3, 'Bob@gmail.com', '123qwe', 'Bob', 'Petrov', 'MANAGER', 'MANAGER', null, null),
-       (4, 'Van@gmail.com', '123qwe', 'Van', 'Petrov', 'CUSTOMER', 'CUSTOMER', null, null),
-       (5, 'Gale@gmail.com', 'qwertys', 'Gale', null, 'CUSTOMER', 'CUSTOMER', null, null);
+VALUES (1, 'Nick@gmail.com', '{noop}123', 'Nick', 'Ivanov', 'CUSTOMER', 'CUSTOMER', null, null),
+       (2, 'Alex@gmail.com', '{noop}123', 'Alex', null, 'CUSTOMER', 'CUSTOMER', null, null),
+       (3, 'Bob@gmail.com', '{noop}123', 'Bob', 'Petrov', 'MANAGER', 'MANAGER', null, null),
+       (4, 'Van@gmail.com', '{noop}123', 'Van', 'Petrov', 'CUSTOMER', 'CUSTOMER', null, null),
+       (5, 'Gale@gmail.com', '{noop}123', 'Gale', null, 'CUSTOMER', 'CUSTOMER', null, null);
 SELECT SETVAL('users_id_seq', (SELECT MAX(id) FROM users));
 
 INSERT INTO producer (id, name)

@@ -6,3 +6,9 @@ ALTER TABLE orders
 
 ALTER TABLE orders
     ADD COLUMN modified_at TIMESTAMP;
+
+ALTER TABLE orders
+    ADD COLUMN created_by VARCHAR;
+
+ALTER TABLE orders
+    ADD COLUMN modified_by VARCHAR;
