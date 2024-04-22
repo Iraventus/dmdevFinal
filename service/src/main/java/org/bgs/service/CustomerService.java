@@ -39,6 +39,11 @@ public class CustomerService {
                 .map(customerReadMapper::map);
     }
 
+    public Optional<CustomerReadDto> findByLogin(String login) {
+        return customerRepository.findByLogin(login)
+                .map(customerReadMapper::map);
+    }
+
     @Transactional
     public CustomerReadDto create(CustomerCreateEditDto customerDto) {
         return Optional.of(customerDto)

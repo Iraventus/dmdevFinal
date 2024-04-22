@@ -15,19 +15,18 @@ import org.springframework.web.server.ResponseStatusException;
 @Controller
 @RequestMapping("/managers")
 @RequiredArgsConstructor
+@PreAuthorize("hasAuthority('MANAGER')")
 public class ManagerController {
 
     private final ManagerService managerService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('MANAGER')")
     public String findAll(Model model, UserFilter filter) {
         model.addAttribute("managers", managerService.findAll(filter));
         return "manager/managers";
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('MANAGER')")
     public String findById(@PathVariable("id") Long id, Model model) {
         return managerService.findById(id)
                 .map(manager -> {
@@ -38,7 +37,6 @@ public class ManagerController {
     }
 
     @GetMapping("/registration")
-    @PreAuthorize("hasAuthority('MANAGER')")
     public String registration(Model model, @ModelAttribute("manager") ManagerCreateEditDto manager) {
         model.addAttribute("managers", manager);
         model.addAttribute("roles", Role.values());
@@ -46,14 +44,12 @@ public class ManagerController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('MANAGER')")
     public String create(@ModelAttribute ManagerCreateEditDto manager) {
         managerService.create(manager);
         return "redirect:/login";
     }
 
     @PostMapping("/{id}/update")
-    @PreAuthorize("hasAuthority('MANAGER')")
     public String update(@PathVariable("id") Long id, @ModelAttribute ManagerCreateEditDto manager) {
         return managerService.update(id, manager)
                 .map(it -> "redirect:/managers/{id}")
@@ -61,7 +57,6 @@ public class ManagerController {
     }
 
     @PostMapping("/{id}/delete")
-    @PreAuthorize("hasAuthority('MANAGER')")
     public String delete(@PathVariable("id") Long id) {
         if (!managerService.delete(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);

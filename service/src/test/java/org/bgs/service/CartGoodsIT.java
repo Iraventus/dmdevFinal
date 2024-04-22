@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.bgs.dto.CartGoodsCreateEditDto;
 import org.bgs.dto.CartGoodsReadDto;
 import org.bgs.repository.BaseIT;
+import org.bgs.repository.CartRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -21,11 +22,28 @@ public class CartGoodsIT extends BaseIT {
     private static final Long GOODS_1 = 1L;
     private static final Long CART_1 = 1L;
     private final CartGoodsService cartGoodsService;
+    private final CustomerService customerService;
+    private final CartRepository cartRepository;
 
     @Test
     void findAll() {
         List<CartGoodsReadDto> result = cartGoodsService.findAll();
         assertThat(result).hasSize(3);
+    }
+
+    @Test
+    void findAllByUser() {
+        List<CartGoodsReadDto> result = cartGoodsService.
+                showAllGoodsInCart(customerService.findById(1L).orElseThrow());
+        assertThat(result).hasSize(2);
+    }
+
+    @Test
+    void checkAddToCart() {
+        var customer = customerService.findById(1L).orElseThrow();
+        cartGoodsService.addToCart(4L, customer);
+        assertThat(cartGoodsService.showAllGoodsInCart(customer).stream()
+                .filter(good -> good.getGoods().getName().contains("Arkham Horror"))).hasSize(1);
     }
 
     @Test

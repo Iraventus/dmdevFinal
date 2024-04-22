@@ -7,10 +7,22 @@
 <body>
 <div th:insert="~{fragment :: header}"></div>
 <div th:each="boardGame : ${boardGames}">
-    <a th:href="@{'/boardGames/' + ${boardGame.id}}" th:text="|${boardGame.name}. ${boardGame.price}|">BoardGame</a>
+    <form th:action="@{/add-to-cart}" method="post">
+    <a th:href="@{'/boardGames/' + ${boardGame.id}}"
+       th:text="|${boardGame.name}. ${boardGame.price}|">BoardGame</a>
+        <input name="goodId" type="text" hidden th:value="${boardGame.id}">
+    <button type="submit">Add to cart</button>
+    </form>
 </div>
 <div th:each="accessory : ${accessories}">
+    <form th:action="@{/add-to-cart}" method="post">
     <a th:href="@{'/accessories/' + ${accessory.id}}" th:text="|${accessory.name}. ${accessory.price}|">Accessory</a>
+        <input name="goodId" type="text" hidden th:value="${accessory.id}">
+    <button type="submit">Add to cart</button>
+    </form>
 </div>
+<form action="/cart" method="get">
+    <button type="submit">Cart</button>
+</form>
 </body>
 </html>

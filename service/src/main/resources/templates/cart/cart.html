@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Goods</title>
+</head>
+<body>
+<div th:with="total=0">
+    <div th:each="goods : ${cartGoods}">
+        <a th:text="|${goods.getGoods().getName()}, ${goods.getGoods().getPrice()} - ${goods.getTotalGoods()}|">Goods</a>
+        <span th:text="${goods.getGoods().getPrice()} * ${goods.getTotalGoods()}"></span>
+
+        <span th:with="total=${total} + ${goods.getGoods().getPrice()} * ${goods.getTotalGoods()}"></span>
+    </div>
+
+    <p>Total cost: <span th:text="${total}"></span></p>
+</div>
+
+</body>
+</html>
