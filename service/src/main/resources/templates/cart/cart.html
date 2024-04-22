@@ -10,6 +10,7 @@
         <a th:text="|${goods.getGoods().getName()}, ${goods.getGoods().getPrice()} - ${goods.getTotalGoods()}|">Goods</a>
         <span th:text="${goods.getGoods().getPrice()} * ${goods.getTotalGoods()}"></span>
 
+
         <span th:with="total=${total} + ${goods.getGoods().getPrice()} * ${goods.getTotalGoods()}"></span>
     </div>
 
