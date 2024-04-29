@@ -3,6 +3,7 @@ package org.bgs.http.controller;
 import lombok.RequiredArgsConstructor;
 import org.bgs.dto.UserCreateEditDto;
 import org.bgs.repository.BaseIT;
+import org.bgs.repository.ManagerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
@@ -17,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ManagerControllerTest extends BaseIT {
 
     private final MockMvc mockMvc;
+    private final ManagerRepository managerRepository;
 
     @Test
     void findAll() throws Exception {
@@ -40,8 +42,12 @@ public class ManagerControllerTest extends BaseIT {
                 .andExpectAll(
                         status().is3xxRedirection(),
                         redirectedUrl("/login")
-
                 );
+        managerRepository.findAll()
+                .stream()
+                .filter(manager -> manager.getLogin().equals("test1@gmail.com"))
+                .findFirst()
+                .orElseThrow();
     }
 
     @Test

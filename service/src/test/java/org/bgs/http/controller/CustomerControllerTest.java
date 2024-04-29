@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.bgs.dto.CustomerCreateEditDto;
 import org.bgs.dto.UserCreateEditDto;
 import org.bgs.repository.BaseIT;
+import org.bgs.repository.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +25,7 @@ class CustomerControllerTest extends BaseIT {
     private static final int houseNumber = 3;
     private static final String STREET_NAME = "someStreetName";
     private final MockMvc mockMvc;
+    private final CustomerRepository customerRepository;
 
     @Test
     void findAll() throws Exception {
@@ -53,8 +55,12 @@ class CustomerControllerTest extends BaseIT {
                 .andExpectAll(
                         status().is3xxRedirection(),
                         redirectedUrl("/login")
-
                 );
+        customerRepository.findAll()
+                .stream()
+                .filter(customer -> customer.getLogin().equals("test1@gmail.com"))
+                .findFirst()
+                .orElseThrow();
     }
 
     @Test

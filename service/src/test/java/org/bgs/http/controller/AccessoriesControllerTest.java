@@ -3,6 +3,7 @@ package org.bgs.http.controller;
 import lombok.RequiredArgsConstructor;
 import org.bgs.dto.GoodsCreateEditDto;
 import org.bgs.repository.BaseIT;
+import org.bgs.service.AccessoriesService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
@@ -17,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AccessoriesControllerTest extends BaseIT {
 
     private final MockMvc mockMvc;
+    private final AccessoriesService accessoriesService;
 
     @Test
     void findAll() throws Exception {
@@ -39,6 +41,11 @@ public class AccessoriesControllerTest extends BaseIT {
                         status().is3xxRedirection(),
                         redirectedUrlPattern("/accessories/*")
                 );
+        accessoriesService.findAll()
+                .stream()
+                .filter(accessory -> accessory.getName().equals("someName1"))
+                .findFirst()
+                .orElseThrow();
     }
 
     @Test

@@ -3,6 +3,7 @@ package org.bgs.http.controller;
 import lombok.RequiredArgsConstructor;
 import org.bgs.dto.ProducerReadDto;
 import org.bgs.repository.BaseIT;
+import org.bgs.repository.ProducerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
@@ -17,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProducerControllerTest extends BaseIT {
 
     private final MockMvc mockMvc;
+    private final ProducerRepository producerRepository;
 
     @Test
     void findAll() throws Exception {
@@ -37,6 +39,11 @@ public class ProducerControllerTest extends BaseIT {
                         status().is3xxRedirection(),
                         redirectedUrlPattern("/producers/*")
                 );
+        producerRepository.findAll()
+                .stream()
+                .filter(producer -> producer.getName().equals("someName1"))
+                .findFirst()
+                .orElseThrow();
     }
 
     @Test

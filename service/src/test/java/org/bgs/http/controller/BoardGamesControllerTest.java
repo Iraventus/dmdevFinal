@@ -6,6 +6,7 @@ import org.bgs.dto.GoodsCreateEditDto;
 import org.bgs.entity.BoardGameTheme;
 import org.bgs.entity.Localization;
 import org.bgs.repository.BaseIT;
+import org.bgs.repository.BoardGamesRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BoardGamesControllerTest extends BaseIT {
 
     private final MockMvc mockMvc;
+    private final BoardGamesRepository boardGamesRepository;
 
     @Test
     void findAll() throws Exception {
@@ -45,8 +47,12 @@ public class BoardGamesControllerTest extends BaseIT {
                 .andExpectAll(
                         status().is3xxRedirection(),
                         redirectedUrlPattern("/boardGames/*")
-
                 );
+        boardGamesRepository.findAll()
+                .stream()
+                .filter(boardGames -> boardGames.getName().equals("someName1"))
+                .findFirst()
+                .orElseThrow();
     }
 
     @Test
