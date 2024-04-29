@@ -30,7 +30,7 @@ public class FirstAspect {
                     ("The method " + joinPoint.getSignature().getName() + " returned {} result", result);
             return result;
         } catch (Throwable ex) {
-            log.info("AROUND after throwing - invoked method " + joinPoint.getSignature().getName() + ", exception {}", ex.getMessage());
+            log.info("AROUND after throwing - invoked method " + joinPoint.getSignature().getName() + " , exception {}", ex.getMessage());
             throw ex;
         }
     }
