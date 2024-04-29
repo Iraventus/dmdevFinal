@@ -20,7 +20,6 @@ public class CartGoodsReadMapper implements Mapper<CartGoods, CartGoodsReadDto> 
     private final BoardGamesReadMapper boardGamesReadMapper;
     private final AccessoriesReadMapper accessoriesReadMapper;
     private final CartReadMapper cartReadMapper;
-    private final OrderReadMapper orderReadMapper;
 
 
     @Override
@@ -29,14 +28,10 @@ public class CartGoodsReadMapper implements Mapper<CartGoods, CartGoodsReadDto> 
         CartReadDto cart = Optional.ofNullable(object.getCart())
                 .map(cartReadMapper::map)
                 .orElse(null);
-        OrderReadDto order = Optional.ofNullable(object.getOrder())
-                .map(orderReadMapper::map)
-                .orElse(null);
         return new CartGoodsReadDto(
                 object.getId(),
                 goods,
                 cart,
-                order,
                 object.getTotalGoods()
         );
     }

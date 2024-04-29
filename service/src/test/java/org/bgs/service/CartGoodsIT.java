@@ -18,12 +18,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CartGoodsIT extends BaseIT {
 
     private static final Long CART_GOODS_1 = 1L;
-    private static final Long ORDER_1 = 1L;
     private static final Long GOODS_1 = 1L;
+    private static final Long GOODS_4 = 4L;
     private static final Long CART_1 = 1L;
+    private static final Long USER_1 = 1L;
     private final CartGoodsService cartGoodsService;
     private final CustomerService customerService;
-    private final CartRepository cartRepository;
 
     @Test
     void findAll() {
@@ -34,14 +34,14 @@ public class CartGoodsIT extends BaseIT {
     @Test
     void findAllByUser() {
         List<CartGoodsReadDto> result = cartGoodsService.
-                showAllGoodsInCart(customerService.findById(1L).orElseThrow());
+                showAllGoodsInCart(customerService.findById(USER_1).orElseThrow());
         assertThat(result).hasSize(2);
     }
 
     @Test
     void checkAddToCart() {
-        var customer = customerService.findById(1L).orElseThrow();
-        cartGoodsService.addToCart(4L, customer);
+        var customer = customerService.findById(USER_1).orElseThrow();
+        cartGoodsService.addToCart(GOODS_4, customer);
         assertThat(cartGoodsService.showAllGoodsInCart(customer).stream()
                 .filter(good -> good.getGoods().getName().contains("Arkham Horror"))).hasSize(1);
     }
@@ -58,7 +58,6 @@ public class CartGoodsIT extends BaseIT {
         CartGoodsCreateEditDto cartGoods = new CartGoodsCreateEditDto(
                 GOODS_1,
                 CART_1,
-                ORDER_1,
                 3
         );
 
@@ -66,7 +65,6 @@ public class CartGoodsIT extends BaseIT {
 
         assertEquals(cartGoods.getGoodsId(), actualResult.getGoods().getId());
         assertEquals(cartGoods.getCartId(), actualResult.getCart().getId());
-        assertEquals(cartGoods.getOrderId(), actualResult.getOrder().getId());
         assertEquals(cartGoods.getTotalGoods(), actualResult.getTotalGoods());
     }
 
@@ -75,7 +73,6 @@ public class CartGoodsIT extends BaseIT {
         CartGoodsCreateEditDto cartGoods = new CartGoodsCreateEditDto(
                 GOODS_1,
                 CART_1,
-                ORDER_1,
                 3
         );
 
@@ -85,7 +82,6 @@ public class CartGoodsIT extends BaseIT {
         actualResult.ifPresent(actual -> {
             assertEquals(cartGoods.getGoodsId(), actual.getGoods().getId());
             assertEquals(cartGoods.getCartId(), actual.getCart().getId());
-            assertEquals(cartGoods.getOrderId(), actual.getOrder().getId());
             assertEquals(cartGoods.getTotalGoods(), actual.getTotalGoods());
         });
     }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.bgs.dto.CartGoodsCreateEditDto;
 import org.bgs.dto.CartGoodsReadDto;
 import org.bgs.dto.CustomerReadDto;
+import org.bgs.entity.BaseEntity;
 import org.bgs.entity.Cart;
 import org.bgs.entity.CartGoods;
 import org.bgs.entity.goods.Goods;
@@ -17,6 +18,7 @@ import org.bgs.repository.GoodsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,32 +57,45 @@ public class CartGoodsService {
     @Transactional
     public void addToCart(Long goodId, CustomerReadDto customerReadDto) {
         Cart cart = cartRepository.findByUserId(customerReadDto.getId())
-                .orElse(null);
-        if (cart == null) {
-            Customer customer = customerRepository.findByLogin(customerReadDto.getLogin()).orElseThrow();
-            cart = new Cart(customer, null);
-            cartRepository.saveAndFlush(cart);
-        }
+                .orElseGet(() -> {
+                    Customer customer = customerRepository.findByLogin(customerReadDto.getLogin()).orElseThrow();
+                    return new Cart(customer, null);
+                });
+        cartRepository.saveAndFlush(cart);
         CartGoods cartGoods = cartGoodsRepository
-                .findByGoodsIdAndCartId(goodId, cart.getId()).orElse(null);
-        if (cartGoods == null) {
-            Goods goods = goodsRepository.findById(goodId).orElseThrow();
-            cartGoods = new CartGoods(goods, cart, null, 0);
-        }
+                .findByGoodsIdAndCartId(goodId, cart.getId()).orElseGet(() -> {
+                    Goods goods = goodsRepository.findById(goodId).orElseThrow();
+                    return new CartGoods(goods, cart, null, 0);
+                });
         cartGoods.setTotalGoods(cartGoods.getTotalGoods() + 1);
         cartGoodsRepository.saveAndFlush(cartGoods);
     }
 
     @Transactional
+    public void deletePosition(Long goodId, CustomerReadDto customerReadDto) {
+        Long cartId = cartRepository.findByUserId(customerReadDto.getId())
+                .map(BaseEntity::getId).orElseThrow();
+        CartGoods cartGoods = cartGoodsRepository
+                .findByGoodsIdAndCartId(goodId, cartId).orElseThrow();
+        if (cartGoods.getTotalGoods() > 1) {
+            cartGoods.setTotalGoods(cartGoods.getTotalGoods() - 1);
+        } else {
+            delete(cartGoods.getId());
+        }
+    }
+
+    @Transactional
     public List<CartGoodsReadDto> showAllGoodsInCart(CustomerReadDto customerReadDto) {
         Cart cart = cartRepository.findByUserId(customerReadDto.getId())
-                .orElse(null);
-        if (cart == null) {
-            Customer customer = customerRepository.findByLogin(customerReadDto.getLogin()).orElseThrow();
-            cart = new Cart(customer, null);
-            cartRepository.saveAndFlush(cart);
-        }
-        return cartGoodsRepository.findAllByCartId(cart.getId()).stream().map(cartGoodsReadMapper::map).toList();
+                .orElseGet(() -> {
+                    Customer customer = customerRepository.findByLogin(customerReadDto.getLogin()).orElseThrow();
+                    return new Cart(customer, null);
+                });
+        cartRepository.saveAndFlush(cart);
+        return cartGoodsRepository.findAllByCartId(cart.getId()).stream()
+                .map(cartGoodsReadMapper::map)
+                .sorted(Comparator.comparing(good -> good.getGoods().getName()))
+                .toList();
     }
 
     @Transactional

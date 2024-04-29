@@ -19,7 +19,6 @@ public class CartGoodsCreateEditMapper implements Mapper<CartGoodsCreateEditDto,
 
     private final GoodsRepository goodsRepository;
     private final CartRepository cartRepository;
-    private final OrderRepository orderRepository;
 
 
     @Override
@@ -38,7 +37,6 @@ public class CartGoodsCreateEditMapper implements Mapper<CartGoodsCreateEditDto,
     private void copy(CartGoodsCreateEditDto object, CartGoods cartGoods) {
         cartGoods.setGoods(getGoods(object.getGoodsId()));
         cartGoods.setCart(getCart(object.getCartId()));
-        cartGoods.setOrder(getOrder(object.getOrderId()));
         cartGoods.setTotalGoods(object.getTotalGoods());
     }
 
@@ -51,12 +49,6 @@ public class CartGoodsCreateEditMapper implements Mapper<CartGoodsCreateEditDto,
     public Cart getCart(Long id) {
         return Optional.ofNullable(id)
                 .flatMap(cartRepository::findById)
-                .orElse(null);
-    }
-
-    public Order getOrder(Long id) {
-        return Optional.ofNullable(id)
-                .flatMap(orderRepository::findById)
                 .orElse(null);
     }
 }

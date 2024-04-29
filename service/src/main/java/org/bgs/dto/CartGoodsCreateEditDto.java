@@ -9,6 +9,5 @@ public class CartGoodsCreateEditDto {
 
     Long goodsId;
     Long cartId;
-    Long orderId;
     Integer totalGoods;
 }

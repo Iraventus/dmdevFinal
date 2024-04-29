@@ -5,16 +5,19 @@
     <title>Goods</title>
 </head>
 <body>
-<div th:with="total=0">
-    <div th:each="goods : ${cartGoods}">
-        <a th:text="|${goods.getGoods().getName()}, ${goods.getGoods().getPrice()} - ${goods.getTotalGoods()}|">Goods</a>
-        <span th:text="${goods.getGoods().getPrice()} * ${goods.getTotalGoods()}"></span>
-
-        <span th:with="total=${total} + ${goods.getGoods().getPrice()} * ${goods.getTotalGoods()}"></span>
-    </div>
-
-    <p>Total cost: <span th:text="${total}"></span></p>
+<div th:each="good : ${cartGoods}">
+    <form th:action="@{/cart}" method="post">
+    <a th:text="|${good.getGoods().getName()}, ${good.getGoods().getPrice()} rub - ${good.getTotalGoods()} position(s)|">Goods</a>
+    <span th:text="${good.getGoods().getPrice()} * ${good.getTotalGoods()}"></span>
+    <span th:text="rub"></span>
+        <input name="goodId" type="text" hidden th:value="${good.getGoods().id}">
+        <button type="submit">Remove position</button>
+    </form>
 </div>
+<p>Total cost: <span th:text="${totalPrice}"></span></p>
 
+<form action="/main-page" method="get">
+    <button type="submit">Continue shopping</button>
+</form>
 </body>
 </html>
