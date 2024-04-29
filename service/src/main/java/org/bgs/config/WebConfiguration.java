@@ -34,7 +34,6 @@ public class WebConfiguration implements WebMvcConfigurer {
         return interceptor;
     }
 
-    /** Дефолтная локаль не работает корректно без этого бина */
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource=new ResourceBundleMessageSource();
