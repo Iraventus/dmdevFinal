@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:each="good : ${goods}">
+            <a th:text="|${good.getGoods().getName()}, ${good.getGoods().getPrice()} rub - ${good.getTotalGoods()} position(s)|">Goods</a>
+            <span th:text="${good.getGoods().getPrice()} * ${good.getTotalGoods()}"></span>
+            <span th:text="rub"></span>
+    </div>
+
+    <p>Total cost: <span th:text="${totalPrice}"></span></p>
+
+<form th:action="@{/orders/paid}" method="post">
+    <input name="orderId" type="text" hidden th:value="${order.getId()}">
+    <button type="submit">Pay</button>
+</form>
+
+<form th:action="@{/orders/reserved}" method="post">
+    <input name="orderId" type="text" hidden th:value="${order.getId()}">
+    <button type="submit">Reservation</button>
+</form>
+
+    <div th:if="${errors}">
+        <p style="color: red" th:each="error : ${errors}" th:text="${error.defaultMessage}">Error message</p>
+    </div>
+</body>
+</html>

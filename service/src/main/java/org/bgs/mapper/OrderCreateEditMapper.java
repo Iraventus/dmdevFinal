@@ -2,15 +2,17 @@ package org.bgs.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.bgs.dto.OrderCreateEditDto;
-import org.bgs.entity.CartGoods;
 import org.bgs.entity.Order;
+import org.bgs.entity.Status;
 import org.bgs.entity.users.Customer;
 import org.bgs.repository.CartGoodsRepository;
 import org.bgs.repository.CustomerRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.time.Instant;
 import java.util.Optional;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Component
 @RequiredArgsConstructor
@@ -20,31 +22,29 @@ public class OrderCreateEditMapper implements Mapper<OrderCreateEditDto, Order> 
     private final CartGoodsRepository cartGoodsRepository;
 
     @Override
-    public Order map(OrderCreateEditDto object) {
+    public Order map(OrderCreateEditDto orderCreateEditDto) {
         Order order = new Order();
-        copy(object, order);
+        copy(orderCreateEditDto, order);
+        if (orderCreateEditDto.getStatus() == Status.RESERVED) {
+            order.setReservationEndDate(Instant.now().plus(2, DAYS));
+        }
         return order;
     }
 
     @Override
-    public Order map(OrderCreateEditDto fromObject, Order toObject) {
-        copy(fromObject, toObject);
-        return toObject;
+    public Order map(OrderCreateEditDto orderCreateEditDto, Order order) {
+        copy(orderCreateEditDto, order);
+        return order;
     }
 
-    private void copy(OrderCreateEditDto object, Order order) {
-        order.setUser(getUser(object.getUserId()));
-        order.setStatus(object.getStatus());
-        order.setCartGoods(getCartGoods(object.getGoodsIds()));
+    private void copy(OrderCreateEditDto orderCreateEditDto, Order order) {
+        order.setUser(getUser(orderCreateEditDto.getUserId()));
+        order.setStatus(orderCreateEditDto.getStatus());
     }
 
     public Customer getUser(Long userId) {
         return Optional.ofNullable(userId)
                 .flatMap(customerRepository::findById)
                 .orElseThrow();
-    }
-
-    public List<CartGoods> getCartGoods(List<Long> ids) {
-        return cartGoodsRepository.findAllById(ids);
     }
 }

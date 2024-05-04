@@ -16,14 +16,16 @@ public class BoardGamesReadDto extends GoodsReadDto {
     Localization localization;
     String contents;
     String creator;
+    String image;
 
     @Builder
     public BoardGamesReadDto(Long id, String name, String description, Integer quantity, Integer price,
-                             BoardGameTheme boardGameTheme, Localization localization, String contents, String creator) {
+                             BoardGameTheme boardGameTheme, Localization localization, String contents, String creator, String image) {
         super(id, name, description, quantity, price);
         this.boardGameTheme = boardGameTheme;
         this.localization = localization;
         this.contents = contents;
         this.creator = creator;
+        this.image = image;
     }
 }

@@ -29,7 +29,6 @@ public class CartCreateEditMapper implements Mapper<CartCreateEditDto, Cart> {
     }
 
     private void copy(CartCreateEditDto object, Cart cart) {
-        cart.setCart(getUser(object.getUserId()));
         cart.setUser(getUser(object.getUserId()));
     }
 

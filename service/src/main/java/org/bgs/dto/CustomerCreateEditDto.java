@@ -1,6 +1,8 @@
 package org.bgs.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 import lombok.experimental.FieldNameConstants;
 import org.bgs.entity.Role;
 import org.bgs.nodeModel.AddressNode;

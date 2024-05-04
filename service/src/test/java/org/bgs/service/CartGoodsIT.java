@@ -5,7 +5,6 @@ import org.assertj.core.api.Assertions;
 import org.bgs.dto.CartGoodsCreateEditDto;
 import org.bgs.dto.CartGoodsReadDto;
 import org.bgs.repository.BaseIT;
-import org.bgs.repository.CartRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

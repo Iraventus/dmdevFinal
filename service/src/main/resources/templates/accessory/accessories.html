@@ -7,6 +7,7 @@
 <body>
 <div th:each="accessory : ${accessories}">
     <a th:href="@{'/accessories/' + ${accessory.id}}" th:text="|${accessory.name}. ${accessory.price}|">Accessory</a>
+    <div th:text="|Left in stock ${accessory.quantity}|">Accessory</div>
 </div>
 </body>
 </html>

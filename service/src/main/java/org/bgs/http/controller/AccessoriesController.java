@@ -2,14 +2,21 @@ package org.bgs.http.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.bgs.dto.AccessoriesCreateEditDto;
+import org.bgs.entity.Role;
 import org.bgs.service.AccessoriesService;
 import org.bgs.service.ProducerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.security.Principal;
+import java.util.Collection;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/accessories")
@@ -26,14 +33,30 @@ public class AccessoriesController {
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Long id, Model model) {
-        return accessoriesService.findById(id)
-                .map(accessory -> {
-                    model.addAttribute("accessory", accessory);
-                    model.addAttribute("producers", producerService.findAll());
-                    return "accessory/accessory";
-                })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public String findById(Principal principal, @PathVariable("id") Long id, Model model) {
+        Authentication authentication = (Authentication) principal;
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        String role = authorities.stream().map(GrantedAuthority::getAuthority)
+                .filter(auth -> auth.equals("CUSTOMER"))
+                .findFirst().orElse(null);
+        if (Objects.equals(role, Role.CUSTOMER.name())) {
+            return accessoriesService.findById(id)
+                    .map(accessory -> {
+                        model.addAttribute("accessory", accessory);
+                        model.addAttribute("producers", producerService.
+                                findByAccessoriesName(accessory.getName()));
+                        return "accessory/accessoryDescription";
+                    })
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        } else {
+            return accessoriesService.findById(id)
+                    .map(accessory -> {
+                        model.addAttribute("accessory", accessory);
+                        model.addAttribute("producers", producerService.findAll());
+                        return "accessory/accessory";
+                    })
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        }
     }
 
     @PostMapping

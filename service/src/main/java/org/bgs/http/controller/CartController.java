@@ -1,11 +1,9 @@
 package org.bgs.http.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.bgs.dto.CartGoodsReadDto;
 import org.bgs.dto.CustomerReadDto;
 import org.bgs.service.CartGoodsService;
 import org.bgs.service.CustomerService;
-import org.bgs.service.OrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,20 +21,12 @@ public class CartController {
 
     private final CustomerService customerService;
     private final CartGoodsService cartGoodsService;
-    private final OrderService orderService;
 
     @GetMapping
     public String userCart(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         CustomerReadDto customer = customerService.findByLogin(userDetails.getUsername())
                 .orElseThrow();
         model.addAttribute("cartGoods", cartGoodsService.showAllGoodsInCart(customer));
-        model.addAttribute("totalPrice", cartGoodsService
-                .showAllGoodsInCart(customer).stream()
-                .mapToInt(good -> good.getGoods().getPrice() * good.getTotalGoods())
-                .sum()
-        );
-        model.addAttribute("goodsIds", cartGoodsService.showAllGoodsInCart(customer)
-                .stream().mapToLong(CartGoodsReadDto::getId));
         return "cart/cart";
     }
 

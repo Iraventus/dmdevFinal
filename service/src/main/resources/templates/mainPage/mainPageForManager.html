@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:insert="~{fragment :: header}"></div>
+<div th:each="boardGame : ${boardGames}">
+        <a th:href="@{'/boardGames/' + ${boardGame.id}}"
+           th:text="|${boardGame.name}. ${boardGame.price}|">BoardGame</a>
+        <input name="goodId" type="text" hidden th:value="${boardGame.id}">
+</div>
+<div th:each="accessory : ${accessories}">
+        <a th:href="@{'/accessories/' + ${accessory.id}}"
+           th:text="|${accessory.name}. ${accessory.price}|">Accessory</a>
+        <input name="goodId" type="text" hidden th:value="${accessory.id}">
+</div>
+
+<form action="/accessories/addingPosition" method="get">
+    <button type="submit">Add Accessory</button>
+</form>
+
+<form action="/boardGames/addingPosition" method="get">
+    <button type="submit">Add BoardGame</button>
+</form>
+
+</body>
+</html>

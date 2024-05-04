@@ -32,6 +32,11 @@ public class ProducerService {
                 .map(producerReadMapper::map);
     }
 
+    public Optional<ProducerReadDto> findByAccessoriesName(String name) {
+        return producerRepository.findProducerByAccessoriesName(name)
+                .map(producerReadMapper::map);
+    }
+
     @Transactional
     public ProducerReadDto create(ProducerCreateEditDto producerCreateEditDto) {
         return Optional.of(producerCreateEditDto)

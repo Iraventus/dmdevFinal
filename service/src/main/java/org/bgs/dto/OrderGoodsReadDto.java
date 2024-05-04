@@ -2,12 +2,13 @@ package org.bgs.dto;
 
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
-import org.bgs.entity.Status;
 
 @Value
 @FieldNameConstants
-public class OrderCreateEditDto {
+public class OrderGoodsReadDto {
 
-    Long userId;
-    Status status;
+    Long id;
+    OrderReadDto order;
+    GoodsReadDto goods;
+    Integer totalGoods;
 }

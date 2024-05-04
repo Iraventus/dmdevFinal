@@ -7,6 +7,7 @@
 <body>
 <div th:each="boardGame : ${boardGames}">
     <a th:href="@{'/boardGames/' + ${boardGame.id}}" th:text="|${boardGame.name}. ${boardGame.price}|">BoardGame</a>
+    <div th:text="|Left in stock ${boardGame.quantity}|">BoardGame</div>
 </div>
 </body>
 </html>

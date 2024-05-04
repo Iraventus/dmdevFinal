@@ -22,13 +22,17 @@
         <label for="producer">Producer:
             <select id="producer" name="producerId">
                 <option th:each="producer : ${producers}"
-                        th:value="${producer.name()}"
-                        th:selected="${producer.id == accessory.getProducerId()}"
+                        th:value="${producer.id}"
+                        th:selected="${producer.getId() ==  accessory.producerId}"
                         th:text="${producer}">Producer</option>
             </select>
         </label>
     </div>
     <button type="submit">Adding</button>
+</form>
+
+<form action="/main-page" method="get">
+    <button type="submit">Back to Main Page</button>
 </form>
 </body>
 </html>

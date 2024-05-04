@@ -5,7 +5,7 @@
     <title>Registration</title>
 </head>
 <body>
-<form th:action="@{/boardGames}" method="post" th:object="${boardGame}">
+<form th:action="@{/boardGames}" enctype="multipart/form-data" method="post" th:object="${boardGame}">
     <label for="name">Name:
         <input id="name" type="text" name="name" th:value="*{name}">
     </label><br>
@@ -21,21 +21,18 @@
     <label for="quantity">Quantity:
         <input id="quantity" type="text" name="quantity" th:value="*{quantity}">
     </label><br>
+    <label for="image">Image:
+        <input id="image" type="file" name="image">
+    </label><br>
     <div th:each="localization : ${localizations}">
         <input th:id="${localization}" type="radio" name="localization" th:value="${localization}" th:checked="${localization == boardGame.localization}">
         <label th:for="${localization}" th:text="${localization}">Language</label>
     </div>
-    <div>
-        <label for="theme">Theme:
-            <select id="theme" name="companyId">
-                <option th:each="theme : ${themes}"
-                        th:value="${theme.name()}"
-                        th:selected="${theme == boardGame.getBoardGameTheme()}"
-                        th:text="${theme}">Theme</option>
-            </select>
-        </label>
-    </div>
     <button type="submit">Adding</button>
+</form>
+
+<form action="/main-page" method="get">
+    <button type="submit">Back to Main Page</button>
 </form>
 </body>
 </html>

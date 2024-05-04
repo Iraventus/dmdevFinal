@@ -1,6 +1,7 @@
 package org.bgs.entity.users;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.bgs.entity.Cart;
 import org.bgs.entity.Order;
@@ -28,7 +29,7 @@ public class Customer extends User {
     private List<Order> orders;
 
     @Builder
-    public Customer(String login, String password, String firstname, String lastname, String phone, Role role, LocalDate birthDate, AddressNode address, Cart cart, List<Order> orders) {
+    public Customer(@Email String login, String password, String firstname, String lastname, String phone, Role role, LocalDate birthDate, AddressNode address, Cart cart, List<Order> orders) {
         super(login, password, firstname, lastname, phone, role, birthDate);
         this.address = address;
         this.cart = cart;

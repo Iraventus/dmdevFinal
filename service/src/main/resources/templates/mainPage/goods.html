@@ -11,18 +11,26 @@
     <a th:href="@{'/boardGames/' + ${boardGame.id}}"
        th:text="|${boardGame.name}. ${boardGame.price}|">BoardGame</a>
         <input name="goodId" type="text" hidden th:value="${boardGame.id}">
+        <div th:if="${boardGame.getImage()}">
+            <img th:src="@{/api/v1/boardGames/{boardGamesId}/avatar(boardGamesId=${boardGame.id})}" alt="User image">
+        </div>
     <button type="submit">Add to cart</button>
     </form>
 </div>
 <div th:each="accessory : ${accessories}">
     <form th:action="@{/add-to-cart}" method="post">
-    <a th:href="@{'/accessories/' + ${accessory.id}}" th:text="|${accessory.name}. ${accessory.price}|">Accessory</a>
+    <a th:href="@{'/accessories/' + ${accessory.id}}"
+       th:text="|${accessory.name}. ${accessory.price}|">Accessory</a>
         <input name="goodId" type="text" hidden th:value="${accessory.id}">
     <button type="submit">Add to cart</button>
     </form>
 </div>
 <form action="/cart" method="get">
     <button type="submit">Cart</button>
+</form>
+
+<form action="/orders/current-orders" method="get">
+    <button type="submit">My orders</button>
 </form>
 </body>
 </html>

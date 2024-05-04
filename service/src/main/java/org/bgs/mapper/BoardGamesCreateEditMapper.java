@@ -1,8 +1,13 @@
 package org.bgs.mapper;
 
-import org.bgs.entity.goods.BoardGames;
 import org.bgs.dto.BoardGamesCreateEditDto;
+import org.bgs.entity.goods.BoardGames;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
+
+import static java.util.function.Predicate.not;
 
 @Component
 public class BoardGamesCreateEditMapper implements Mapper<BoardGamesCreateEditDto, BoardGames> {
@@ -28,5 +33,9 @@ public class BoardGamesCreateEditMapper implements Mapper<BoardGamesCreateEditDt
         boardGames.setCreator(object.getCreator());
         boardGames.setLocalization(object.getLocalization());
         boardGames.setContents(object.getContents());
+
+        Optional.ofNullable(object.getImage())
+                .filter(not(MultipartFile::isEmpty))
+                .ifPresent(image -> boardGames.setImage(image.getOriginalFilename()));
     }
 }

@@ -40,6 +40,14 @@ public class CartGoodsService {
                 .toList();
     }
 
+    public List<CartGoodsReadDto> findAllByUserId(Long userId) {
+        return cartGoodsRepository.findAll().stream()
+                .filter(cartGoods -> cartGoods.getCart().equals(cartRepository.findByUserId(userId).
+                        orElseThrow()))
+                .map(cartGoodsReadMapper::map)
+                .toList();
+    }
+
     public Optional<CartGoodsReadDto> findById(Long id) {
         return cartGoodsRepository.findById(id)
                 .map(cartGoodsReadMapper::map);
@@ -65,7 +73,9 @@ public class CartGoodsService {
         CartGoods cartGoods = cartGoodsRepository
                 .findByGoodsIdAndCartId(goodId, cart.getId()).orElseGet(() -> {
                     Goods goods = goodsRepository.findById(goodId).orElseThrow();
-                    return new CartGoods(goods, cart, null, 0);
+                    var newCartGoods = new CartGoods(goods);
+                    newCartGoods.setCart(cart);
+                    return newCartGoods;
                 });
         cartGoods.setTotalGoods(cartGoods.getTotalGoods() + 1);
         cartGoodsRepository.saveAndFlush(cartGoods);

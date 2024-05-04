@@ -17,7 +17,8 @@ public class BoardGamesReadMapper implements Mapper<BoardGames, BoardGamesReadDt
                 object.getBoardGameTheme(),
                 object.getLocalization(),
                 object.getContents(),
-                object.getCreator()
+                object.getCreator(),
+                object.getImage()
         );
     }
 }

@@ -7,17 +7,21 @@
 <body>
 <div th:each="good : ${cartGoods}">
     <form th:action="@{/cart}" method="post">
-    <a th:text="|${good.getGoods().getName()}, ${good.getGoods().getPrice()} rub - ${good.getTotalGoods()} position(s)|">Goods</a>
-    <span th:text="${good.getGoods().getPrice()} * ${good.getTotalGoods()}"></span>
-    <span th:text="rub"></span>
+        <a th:text="|${good.getGoods().getName()}, ${good.getGoods().getPrice()} rub - ${good.getTotalGoods()} position(s)|">Goods</a>
+        <span th:text="${good.getGoods().getPrice()} * ${good.getTotalGoods()}"></span>
+        <span th:text="rub"></span>
         <input name="goodId" type="text" hidden th:value="${good.getGoods().id}">
         <button type="submit">Remove position</button>
     </form>
 </div>
-<p>Total cost: <span th:text="${totalPrice}"></span></p>
+
+<form th:action="@{/orders/create-order}" method="post">
+    <button th:disabled="${cartGoods.size() == 0}" type="submit">Go to checkout</button>
+</form>
 
 <form action="/main-page" method="get">
     <button type="submit">Continue shopping</button>
 </form>
+
 </body>
 </html>

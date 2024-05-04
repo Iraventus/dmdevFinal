@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:text="|Paid Orders|">Goods</div>
+<div th:each="paidOrder : ${paidOrders}">
+    <a th:href="@{'/orders/' + ${paidOrder.id}}"
+       th:text="${paidOrder.id}">Goods</a>
+</div>
+
+<div th:text="|Reserved Orders|">Goods</div>
+<div th:each="reservedOrder : ${reservedOrders}">
+    <a th:href="@{'/orders/' + ${reservedOrder.id}}"
+       th:text="${reservedOrder.id}">Goods</a>
+</div>
+
+<form action="/main-page" method="get">
+    <button type="submit">Back to Main Page</button>
+</form>
+
+</body>
+</html>

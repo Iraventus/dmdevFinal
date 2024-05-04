@@ -5,7 +5,7 @@
     <title>Customer</title>
 </head>
 <body>
-<form th:action="@{/boardGames/{boardGameId}/update(boardGameId=${boardGame.id})}" method="post">
+<form th:action="@{/boardGames/{boardGameId}/update(boardGameId=${boardGame.id})}" enctype="multipart/form-data" method="post">
     <label for="name">Name:
         <input id="name" type="text" name="name" th:value="${boardGame.name}">
     </label><br>
@@ -18,6 +18,9 @@
     <label for="contents">Contents:
         <input id="contents" type="text" name="contents" th:value="${boardGame.contents}">
     </label><br>
+    <label for="image">Image:
+        <input id="image" type="file" name="image">
+    </label><br>
     <label for="quantity">Quantity:
         <input id="quantity" type="text" name="quantity" th:value="${boardGame.quantity}">
     </label><br>
@@ -25,20 +28,14 @@
         <input th:id="${localization}" type="radio" name="localization" th:value="${localization}" th:checked="${localization == boardGame.localization}">
         <label th:for="${localization}" th:text="${localization}">Language</label>
     </div>
-    <div>
-        <label for="theme">Theme:
-            <select id="theme" name="theme">
-                <option th:each="theme : ${themes}"
-                        th:value="${theme.name()}"
-                        th:selected="${theme == boardGame.getBoardGameTheme()}"
-                        th:text="${theme}">Theme</option>
-            </select>
-        </label>
-    </div>
     <button type="submit">Update</button>
 </form>
 <form th:action="@{/boardGames/{boardGameId}/delete(boardGameId=${boardGame.id})}" method="post">
     <button type="submit">Remove position</button>
+</form>
+
+<form action="/main-page" method="get">
+    <button type="submit">Back to Main Page</button>
 </form>
 </body>
 </html>

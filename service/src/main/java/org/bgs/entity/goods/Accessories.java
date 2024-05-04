@@ -1,11 +1,11 @@
 package org.bgs.entity.goods;
 
-import jakarta.persistence.*;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 import org.bgs.entity.Producer;
-import org.bgs.entity.CartGoods;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,13 +16,12 @@ import java.util.List;
 @DiscriminatorValue("accessories")
 public class Accessories extends Goods {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Producer producer;
 
     @Builder
-    public Accessories(String name, String description, Integer quantity,
-                       Integer price, List<CartGoods> cartGoods, Producer producer) {
-        super(name, description, quantity, price, cartGoods);
+    public Accessories(String name, String description, Integer quantity, Integer price, Producer producer) {
+        super(name, description, quantity, price);
         this.producer = producer;
     }
 }

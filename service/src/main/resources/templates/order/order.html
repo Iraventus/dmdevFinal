@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order</title>
+</head>
+<body>
+
+<div th:text="|Order ${order.getId()}|">Goods</div>
+
+<span th:if="${order.reservationEndDate != null}" th:text="|Reserved until ${order.reservationEndDate}|">Goods</span>
+
+<div th:each="good : ${goods}">
+        <div th:text="|${good.getGoods().name}, ${good.getGoods().getPrice()} rub - ${good.getTotalGoods()} position(s)|">Goods</div>
+</div>
+
+<form action="/main-page" method="get">
+    <button type="submit">Back to Main Page</button>
+</form>
+
+<form action="/orders/current-orders" method="get">
+    <button type="submit">Back to Orders</button>
+</form>
+
+</body>
+</html>

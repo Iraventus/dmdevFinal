@@ -1,12 +1,9 @@
 package org.bgs.entity.goods;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 import org.bgs.entity.BaseEntity;
-import org.bgs.entity.CartGoods;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,8 +19,9 @@ public abstract class Goods extends BaseEntity<Long> {
     @Column(nullable = false)
     private String name;
     private String description;
+    @Min(0)
     private Integer quantity;
+    @Min(0)
     private Integer price;
-    @OneToMany(mappedBy = "goods")
-    private List<CartGoods> cartGoods = new ArrayList<>();
+
 }

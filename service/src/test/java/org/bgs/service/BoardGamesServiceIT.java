@@ -43,7 +43,8 @@ public class BoardGamesServiceIT extends BaseIT {
                 BoardGameTheme.ECONOMIC,
                 Localization.EN,
                 "100 CARDS",
-                "CREATOR"
+                "CREATOR",
+                null
         );
 
         BoardGamesReadDto actualResult = boardGamesService.create(gameDto);
@@ -64,7 +65,8 @@ public class BoardGamesServiceIT extends BaseIT {
                 BoardGameTheme.ECONOMIC,
                 Localization.EN,
                 "100 CARDS",
-                "CREATOR"
+                "CREATOR",
+                null
         );
 
         Optional<BoardGamesReadDto> actualResult = boardGamesService.update(GAME_1, gameDto);

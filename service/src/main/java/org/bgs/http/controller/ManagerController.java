@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -44,13 +45,13 @@ public class ManagerController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute ManagerCreateEditDto manager) {
+    public String create(@ModelAttribute @Validated ManagerCreateEditDto manager) {
         managerService.create(manager);
         return "redirect:/login";
     }
 
     @PostMapping("/{id}/update")
-    public String update(@PathVariable("id") Long id, @ModelAttribute ManagerCreateEditDto manager) {
+    public String update(@PathVariable("id") Long id, @Validated @ModelAttribute ManagerCreateEditDto manager) {
         return managerService.update(id, manager)
                 .map(it -> "redirect:/managers/{id}")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

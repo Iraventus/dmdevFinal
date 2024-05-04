@@ -23,9 +23,11 @@ public class AddToCartController {
     private final CartGoodsService cartGoodsService;
 
     @PostMapping
-    public String addToCart(@AuthenticationPrincipal UserDetails userDetails, Long goodId) {
+    public String addToCart(@AuthenticationPrincipal UserDetails userDetails,
+                            Long goodId) {
         CustomerReadDto customer = customerService.findByLogin(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
         cartGoodsService.addToCart(goodId, customer);
         return "redirect:/main-page";
     }

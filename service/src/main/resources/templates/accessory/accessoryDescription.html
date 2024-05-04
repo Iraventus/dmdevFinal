@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:text="|${accessory.name} - ${accessory.price}|">Goods</div>
+<div th:text="|Left in stock ${accessory.quantity}|">Goods</div>
+
+<div th:text="${accessory.description}">Goods</div>
+<div th:text="|Producer: ${accessory.producer.name}|">Goods</div>
+
+<form action="/main-page" method="get">
+    <button type="submit">Back to Main Page</button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:text="|${boardGame.name} ${boardGame.localization} - ${boardGame.price}|">Goods</div>
+<div th:text="|Left in stock ${boardGame.quantity}|">Goods</div>
+
+<div th:text="|Description: ${boardGame.description}|">Goods</div>
+<div th:text="|Contents: ${boardGame.contents}|">Goods</div>
+
+<form action="/main-page" method="get">
+    <button type="submit">Back to Main Page</button>
+</form>
+
+</body>
+</html>

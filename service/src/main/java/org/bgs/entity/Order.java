@@ -14,10 +14,11 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "orders")
+@ToString(exclude = {"orderGoods", "user"})
 public class Order extends AuditingEntity<Long> {
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-    private List<CartGoods> cartGoods;
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<OrderGoods> orderGoods;
     @Enumerated(EnumType.STRING)
     private Status status;
     private Instant reservationEndDate;

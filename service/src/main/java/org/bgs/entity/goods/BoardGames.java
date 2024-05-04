@@ -6,10 +6,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.*;
 import org.bgs.entity.BoardGameTheme;
-import org.bgs.entity.CartGoods;
 import org.bgs.entity.Localization;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -25,15 +22,15 @@ public class BoardGames extends Goods {
     private Localization localization;
     private String contents;
     private String creator;
+    private String image;
 
     @Builder
-    public BoardGames(String name, String description, Integer quantity, Integer price,
-                      List<CartGoods> cartGoods, BoardGameTheme boardGameTheme,
-                      Localization localization, String contents, String creator) {
-        super(name, description, quantity, price, cartGoods);
+    public BoardGames(String name, String description, Integer quantity, Integer price, BoardGameTheme boardGameTheme, Localization localization, String contents, String creator, String image) {
+        super(name, description, quantity, price);
         this.boardGameTheme = boardGameTheme;
         this.localization = localization;
         this.contents = contents;
         this.creator = creator;
+        this.image = image;
     }
 }

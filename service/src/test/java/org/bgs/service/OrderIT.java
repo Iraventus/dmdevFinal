@@ -18,7 +18,6 @@ public class OrderIT extends BaseIT {
 
     private static final Long ORDER_1 = 1L;
     private static final Long USER_1 = 1L;
-    private final List<Long> CART_GOODS_1 = List.of(1L);
     private final OrderService orderService;
 
     @Test
@@ -37,9 +36,8 @@ public class OrderIT extends BaseIT {
     @Test
     void create() {
         OrderCreateEditDto orderCreateEditDto = new OrderCreateEditDto(
-                CART_GOODS_1,
-                Status.PAID,
-                USER_1
+                USER_1,
+                Status.PAID
         );
 
         OrderReadDto actualResult = orderService.create(orderCreateEditDto);
@@ -51,9 +49,8 @@ public class OrderIT extends BaseIT {
     @Test
     void update() {
         OrderCreateEditDto orderDto = new OrderCreateEditDto(
-                CART_GOODS_1,
-                Status.PAID,
-                USER_1
+                USER_1,
+                Status.PAID
         );
 
         Optional<OrderReadDto> actualResult = orderService.update(ORDER_1, orderDto);
@@ -67,7 +64,7 @@ public class OrderIT extends BaseIT {
 
     @Test
     void delete() {
-        assertTrue(orderService.delete(USER_1));
+        assertTrue(orderService.delete(ORDER_1));
     }
 
     @Test

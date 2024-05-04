@@ -22,8 +22,8 @@
         <label for="producer">Producer:
             <select id="producer" name="producerId">
                 <option th:each="producer : ${producers}"
-                        th:value="${producer.getName()}"
-                        th:selected="${producer.id == accessory.producer.id}"
+                        th:value="${producer.getId()}"
+                        th:selected="${producer ==  accessory.getProducer()}"
                         th:text="${producer}">Producer</option>
             </select>
         </label>
@@ -32,6 +32,10 @@
 </form>
 <form th:action="@{/accessories/{accessoryId}/delete(accessoryId=${accessory.id})}" method="post">
     <button type="submit">Remove position</button>
+</form>
+
+<form action="/main-page" method="get">
+    <button type="submit">Back to Main Page</button>
 </form>
 </body>
 </html>

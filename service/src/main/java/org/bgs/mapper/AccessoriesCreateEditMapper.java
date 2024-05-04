@@ -39,6 +39,6 @@ public class AccessoriesCreateEditMapper implements Mapper<AccessoriesCreateEdit
     public Producer getProducer(Long producerId) {
         return Optional.ofNullable(producerId)
                 .flatMap(producerRepository::findById)
-                .orElse(null);
+                .orElseThrow();
     }
 }
